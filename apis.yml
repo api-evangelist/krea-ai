@@ -1,0 +1,496 @@
+aid: krea-ai
+url: https://raw.githubusercontent.com/api-evangelist/krea-ai/refs/heads/main/apis.yml
+apis:
+- aid: krea-ai:krea-api
+  name: Krea API
+  tags:
+  - AI
+  - Artificial Intelligence
+  - Image Generation
+  - Video Generation
+  - Generative AI
+  - Multimodal
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  properties:
+  - url: https://docs.krea.ai/api-reference/introduction
+    type: Documentation
+  - url: https://docs.krea.ai/developers/introduction
+    name: Developer Introduction
+    type: Documentation
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  - url: https://docs.krea.ai/api-reference/openapi.json
+    name: Krea API Upstream OpenAPI
+    type: OpenAPI
+  - url: https://docs.krea.ai/api-reference/postman.md
+    name: Import to Postman
+    type: PostmanCollection
+  - url: https://docs.krea.ai/developers/api-keys-and-billing
+    name: API Keys and Billing
+    type: Authentication
+  - url: https://www.krea.ai/settings/api-tokens
+    name: API Tokens Settings
+    type: Authentication
+  - url: https://docs.krea.ai/developers/rate-limits
+    type: RateLimits
+  - url: https://docs.krea.ai/developers/webhooks
+    type: Webhooks
+  - url: https://docs.krea.ai/developers/job-lifecycle
+    name: Job Lifecycle
+    type: Documentation
+  - url: https://docs.krea.ai/developers/deprecations
+    type: Deprecation
+  - url: https://docs.krea.ai/developers/interactiveexample
+    name: Interactive Playground
+    type: Sandbox
+  description: One REST API and one API token to access 50+ image and video generation models from
+    Black Forest Labs (Flux), Google (Imagen, Nano Banana, Veo), OpenAI (gpt-image), Runway, Kling,
+    ByteDance (Seedream, Seedance, SeedEdit), MiniMax (Hailuo), Alibaba (Wan), Luma (Ray), xAI (Grok
+    Imagine), Ideogram, Qwen, and Lightricks. Asynchronous job pattern with poll-or-webhook delivery,
+    asset upload management, custom LoRA training, and node-app execution — all on https://api.krea.ai
+    with Bearer-token authentication and a unified compute-unit billing model.
+- aid: krea-ai:krea-image-generation-api
+  name: Krea Image Generation API
+  tags:
+  - AI
+  - Image Generation
+  - Text To Image
+  - Image To Image
+  humanURL: https://docs.krea.ai/api-reference/image/flux
+  properties:
+  - url: https://docs.krea.ai/api-reference/image/flux
+    type: Documentation
+  - url: https://docs.krea.ai/developers/examples/text-to-image
+    name: Text To Image Example
+    type: CodeExamples
+  - url: https://docs.krea.ai/developers/examples/image-to-image
+    name: Image To Image Example
+    type: CodeExamples
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Text-to-image and image-to-image generation across 22 model endpoints under
+    /generate/image/{provider}/{model}, including Black Forest Labs Flux (Flux 1 dev, Flux 1 Kontext,
+    Flux 1.1 Pro, Flux 1.1 Pro Ultra), Google Imagen 3/4/4-Fast/4-Ultra and Nano Banana / Nano Banana
+    2 / Nano Banana Pro, OpenAI gpt-image and gpt-image-2, ByteDance Seedream 4, Seedream 5 Lite, and
+    SeedEdit, Ideogram 2 Turbo and Ideogram 3, Runway Gen-4 Image, Luma UNI-1, Qwen 2512, and Z Image.
+- aid: krea-ai:krea-video-generation-api
+  name: Krea Video Generation API
+  tags:
+  - AI
+  - Video Generation
+  - Text To Video
+  - Image To Video
+  humanURL: https://docs.krea.ai/api-reference/video/veo-3
+  properties:
+  - url: https://docs.krea.ai/api-reference/video/veo-3
+    type: Documentation
+  - url: https://docs.krea.ai/developers/examples/text-to-video
+    name: Text To Video Example
+    type: CodeExamples
+  - url: https://docs.krea.ai/developers/examples/image-to-video
+    name: Image To Video Example
+    type: CodeExamples
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Text-to-video and image-to-video generation across 31 model endpoints under
+    /generate/video/{provider}/{model}, including Google Veo 2 / Veo 3 / Veo 3 Fast / Veo 3.1 / Veo
+    3.1 Fast / Veo 3.1 Lite, Runway Gen-3, Gen-4 Video, Gen-4.5, and Aleph, Kling 1.0 through Kling
+    3.0 plus Kling o1, MiniMax Hailuo / Hailuo 02 / Hailuo 2.3 / Hailuo 2.3 Fast, Alibaba Wan 2.1 /
+    2.2 / 2.5, ByteDance Seedance Pro and Seedance Pro Fast, Luma Ray 2, Lightricks LTX-2.3 22B, and
+    xAI Grok Imagine.
+- aid: krea-ai:krea-image-enhance-api
+  name: Krea Image Enhance API
+  tags:
+  - AI
+  - Image Enhancement
+  - Upscaling
+  humanURL: https://docs.krea.ai/api-reference/image-enhance/topaz
+  properties:
+  - url: https://docs.krea.ai/api-reference/image-enhance/topaz
+    type: Documentation
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Image upscaling and enhancement powered by Topaz Labs models under /generate/enhance/topaz.
+    Three endpoints — standard-enhance, generative-enhance, and bloom-enhance — deliver up to 22K
+    resolution upscales for stills, with the same Bearer-auth and job-lifecycle pattern as the rest of
+    the Krea API.
+- aid: krea-ai:krea-styles-api
+  name: Krea Styles API (LoRA)
+  tags:
+  - AI
+  - Custom Models
+  - LoRA
+  - Fine Tuning
+  humanURL: https://docs.krea.ai/api-reference/styles/train-a-custom-style-lora
+  properties:
+  - url: https://docs.krea.ai/api-reference/styles/train-a-custom-style-lora
+    type: Documentation
+  - url: https://docs.krea.ai/developers/tutorials/train-image-style
+    name: Train A Custom Style Tutorial
+    type: Tutorial
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Train, search, update, share, and unshare custom LoRA styles. Endpoints include POST
+    /styles/train, GET /styles, GET /styles/{id}, PATCH /styles/{id}, GET /styles/{id}/share/link, and
+    POST/DELETE /styles/{id}/share/workspace — letting teams bake their visual identity into Krea
+    image models without managing GPU infrastructure.
+- aid: krea-ai:krea-assets-api
+  name: Krea Assets API
+  tags:
+  - AI
+  - Asset Management
+  - File Upload
+  humanURL: https://docs.krea.ai/api-reference/assets/upload-an-asset
+  properties:
+  - url: https://docs.krea.ai/api-reference/assets/upload-an-asset
+    type: Documentation
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Upload, list, retrieve, and delete assets (images, videos, audio, 3D models) used as
+    inputs to generation, edit, enhance, and node-app endpoints. Endpoints are POST /assets, GET
+    /assets, GET /assets/{id}, and DELETE /assets/{id}.
+- aid: krea-ai:krea-jobs-api
+  name: Krea Jobs API
+  tags:
+  - AI
+  - Jobs
+  - Async
+  humanURL: https://docs.krea.ai/api-reference/general/list-jobs
+  properties:
+  - url: https://docs.krea.ai/api-reference/general/list-jobs
+    type: Documentation
+  - url: https://docs.krea.ai/developers/job-lifecycle
+    name: Job Lifecycle
+    type: Documentation
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Manage the asynchronous lifecycle of every generation request. GET /jobs lists jobs,
+    GET /jobs/{id} returns the current state (queued, processing, completed, failed, cancelled) with
+    result.urls or result.error, and DELETE /jobs/{id} cancels a queued or running job. Only completed
+    jobs consume compute units — failed and cancelled jobs are free.
+- aid: krea-ai:krea-node-apps-api
+  name: Krea Node Apps API
+  tags:
+  - AI
+  - Workflows
+  - Automation
+  humanURL: https://docs.krea.ai/api-reference/node-apps/execute-a-node-app
+  properties:
+  - url: https://docs.krea.ai/api-reference/node-apps/execute-a-node-app
+    type: Documentation
+  - url: openapi/krea-api-openapi.json
+    type: OpenAPI
+  description: Execute Krea Nodes workflows — visual pipelines built in the Krea Nodes tool — directly
+    from the API. GET /node-apps/{id} inspects a node app by version ID and POST /node-apps/{id}/execute
+    runs it with user-supplied inputs, returning a job ID that follows the standard Krea async pattern.
+name: Krea
+tags:
+- AI
+- Artificial Intelligence
+- Image Generation
+- Video Generation
+- Generative AI
+- Real Time
+- Multimodal
+- Creative Tools
+- 3D
+- Upscaling
+kind: contract
+image: https://kinlane-productions2.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+access: 3rd-Party
+common:
+- type: Portal
+  url: https://www.krea.ai
+- type: Documentation
+  url: https://docs.krea.ai/
+- url: https://docs.krea.ai/api-reference/introduction
+  name: Krea API Reference
+  type: Documentation
+- url: https://docs.krea.ai/developers/introduction
+  name: Developers Introduction
+  type: GettingStarted
+- url: https://docs.krea.ai/llms.txt
+  name: LLMs Documentation Index
+  type: Documentation
+- url: https://docs.krea.ai/CLAUDE.md
+  name: CLAUDE.md
+  type: Documentation
+- url: https://www.krea.ai/pricing
+  type: Pricing
+- url: https://www.krea.ai/settings/api-tokens
+  name: API Tokens
+  type: Authentication
+- url: https://docs.krea.ai/developers/rate-limits
+  type: RateLimits
+- url: https://docs.krea.ai/developers/webhooks
+  type: Webhooks
+- url: https://docs.krea.ai/developers/job-lifecycle
+  name: Job Lifecycle
+  type: Documentation
+- url: https://docs.krea.ai/developers/deprecations
+  type: Deprecation
+- url: https://docs.krea.ai/developers/interactiveexample
+  name: Interactive Playground
+  type: Sandbox
+- url: https://docs.krea.ai/realtime
+  name: Krea Realtime
+  type: Documentation
+- url: https://docs.krea.ai/image-generation
+  name: Image Generation
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/video
+  name: Video Generation
+  type: Documentation
+- url: https://docs.krea.ai/3-d
+  name: 3D
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/edit
+  name: Edit
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/enhancer
+  name: Enhancer
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/training
+  name: Training (LoRA)
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/nodes
+  name: Nodes
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/teams
+  name: Teams
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/features/audio
+  name: Audio
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/help-and-support/compute-units
+  name: Compute Units Guide
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/help-and-support/saml-sso-setup
+  name: SAML SSO Setup
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/help-and-support/domain-verification
+  name: Domain Verification and Capture
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/help-and-support/model-access-controls
+  name: Model Access Controls
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/help-and-support/manage-subscriptions
+  name: Manage Subscriptions
+  type: Documentation
+- url: https://docs.krea.ai/user-guide/help-and-support/refunds-and-billing
+  name: Refunds and Billing
+  type: Documentation
+- url: https://github.com/krea-ai
+  name: Krea AI GitHub
+  type: GitHubOrganization
+- url: https://github.com/krea-ai/realtime-video
+  name: Krea Realtime 14B (open source video model)
+  type: OpenSource
+- url: https://github.com/krea-ai/flux-krea
+  name: FLUX.1 Krea [dev]
+  type: OpenSource
+- url: https://github.com/krea-ai/open-prompts
+  name: Open Prompts
+  type: OpenSource
+- url: https://github.com/krea-ai/prompt-search
+  name: Prompt Search
+  type: OpenSource
+- url: https://github.com/krea-ai/skills
+  name: Krea Skills
+  type: OpenSource
+- url: https://krea.ai/discord
+  type: Forum
+- url: https://x.com/krea_ai
+  type: X-Twitter
+- url: https://www.linkedin.com/company/krea-ai
+  type: LinkedIn
+- url: https://www.youtube.com/@krea_ai
+  type: YouTube
+- url: https://www.krea.ai/pricing
+  data:
+  - id: free
+    name: Free
+    entries:
+    - geo: US
+      unit: 1
+      label: User
+      limit: 1
+      price: Free
+      metric: user
+      timeFrame: month
+      description: 100 compute units per day.
+    elements:
+    - name: 100 compute units per day
+    - name: Real-time generation access
+    - name: Limited model access
+    - name: Basic 2K upscaling
+    - name: Limited LoRA training
+    description: For trying out the Krea creative suite.
+  - id: basic
+    name: Basic
+    entries:
+    - geo: US
+      unit: 1
+      label: User
+      limit: 1
+      price: 9
+      metric: user
+      timeFrame: month
+      description: 5,000 compute units per month.
+    elements:
+    - name: 5,000 compute units / month
+    - name: Access to Krea 2
+    - name: Commercial license
+    - name: Full image, 3D, and lipsync models
+    - name: LoRA fine-tuning up to 50 images
+    - name: 4K upscaling
+    - name: Selected video models
+    description: For everyday creative work.
+  - id: pro
+    name: Pro
+    entries:
+    - geo: US
+      unit: 1
+      label: User
+      limit: 1
+      price: 35
+      metric: user
+      timeFrame: month
+      description: 20,000 compute units per month.
+    elements:
+    - name: 20,000 compute units / month
+    - name: All video models
+    - name: Workflow automation with Nodes
+    - name: AI-powered Nodes Agent
+    - name: Bulk discounts on compute packs
+    - name: 8K upscaling
+    description: For professionals.
+  - id: max
+    name: Max
+    entries:
+    - geo: US
+      unit: 1
+      label: User
+      limit: 1
+      price: 70
+      metric: user
+      timeFrame: month
+      description: 60,000 compute units per month.
+    elements:
+    - name: 60,000 compute units / month
+    - name: Unlimited Krea 2 generation
+    - name: Unlimited LoRA training up to 2,000 files
+    - name: Unlimited concurrency
+    - name: Relaxed generations
+    - name: 22K upscaling
+    description: For power users.
+  - id: business
+    name: Business
+    entries:
+    - geo: US
+      unit: 1
+      label: Team
+      limit: 1
+      price: 200
+      metric: team
+      timeFrame: month
+      description: 80,000 compute units per month, up to 50 seats.
+    elements:
+    - name: 80,000 compute units / month
+    - name: Up to 50 seats included
+    - name: Custom roles and permissions
+    - name: Model access controls
+    - name: Business Terms of Service
+    - name: LoRA training up to 20,000 images
+    description: For teams.
+  - id: enterprise
+    name: Enterprise
+    entries:
+    - geo: US
+      unit: 1
+      label: Organization
+      limit: 1
+      price: Call
+      metric: organization
+      timeFrame: month
+      description: Custom compute unit packages.
+    elements:
+    - name: Custom Terms of Service
+    - name: Priority support with SLA
+    - name: Analytics API
+    - name: Per-member spend limits
+    - name: Slack integration
+    - name: Audit logs
+    - name: Custom compute unit packages
+    description: For enterprises operating at scale.
+  name: Plans
+  type: Plans
+- type: Features
+  data:
+  - One Bearer-token Krea API at https://api.krea.ai exposing 67 endpoints across image, video,
+    enhance, assets, styles, jobs, and node-apps
+  - 22 image generation models across Black Forest Labs Flux (1 dev, 1 Kontext, 1.1 Pro, 1.1 Pro
+    Ultra), Google Imagen 3/4 family and Nano Banana / Nano Banana 2 / Nano Banana Pro, OpenAI
+    gpt-image and gpt-image-2, ByteDance Seedream 4 / Seedream 5 Lite / SeedEdit, Ideogram 2
+    Turbo and Ideogram 3, Runway Gen-4 Image, Luma UNI-1, Qwen 2512, and Z Image
+  - 31 video generation models across Google Veo 2 / Veo 3 / Veo 3 Fast / Veo 3.1 / Veo 3.1
+    Fast / Veo 3.1 Lite, Runway Gen-3, Gen-4 Video, Gen-4.5, and Aleph, Kling 1.0 through 3.0
+    plus Kling o1, MiniMax Hailuo and Hailuo 02 / 2.3 / 2.3 Fast, Alibaba Wan 2.1 / 2.2 / 2.5,
+    ByteDance Seedance Pro and Seedance Pro Fast, Luma Ray 2, Lightricks LTX-2.3 22B, and xAI
+    Grok Imagine
+  - Topaz-powered image enhancement at /generate/enhance/topaz with standard, generative, and
+    bloom variants delivering up to 22K upscales
+  - Krea Realtime experience with sub-50ms image generation and an open-source Realtime 14B
+    autoregressive video model distilled from Wan 2.1 (CC BY-NC-SA 4.0)
+  - Open-source FLUX.1 Krea [dev] 12B rectified-flow image model from a research collaboration
+    with Black Forest Labs, with weights on Hugging Face
+  - Custom LoRA style training, search, sharing, and workspace controls via the Styles API
+  - Krea Nodes visual workflow tool exposed programmatically via /node-apps/{id}/execute
+  - Asset management API for uploading and reusing images, videos, audio, and 3D models across
+    generation jobs
+  - Unified asynchronous job lifecycle (queued, processing, completed, failed, cancelled) with
+    GET /jobs/{id} polling at 2-5s intervals and DELETE /jobs/{id} cancellation
+  - Webhook delivery via X-Webhook-URL header — full job payload POSTed on terminal state with
+    no separate webhook subscription registration
+  - Compute-unit billing model — only completed jobs consume units; failed and cancelled jobs
+    are free
+  - Plan-tiered rate limits with job-backlog queueing instead of hard rejection
+  - Public OpenAPI 3.1.0 spec at https://docs.krea.ai/api-reference/openapi.json plus Postman
+    import and an interactive in-browser playground
+  - Code samples in cURL, Python, JavaScript, and Go on every endpoint
+  - Workspace, teams, SAML SSO, domain verification, model access controls, per-member spend
+    limits, audit logs, and a separate Business / Enterprise tier
+  - Used by Lego, Samsung, Nike, Microsoft, and Shopify
+  sources:
+  - https://www.krea.ai
+  - https://www.krea.ai/pricing
+  - https://docs.krea.ai/llms.txt
+  - https://docs.krea.ai/api-reference/openapi.json
+  - https://docs.krea.ai/developers/introduction
+  - https://docs.krea.ai/developers/rate-limits
+  - https://docs.krea.ai/developers/webhooks
+  - https://docs.krea.ai/developers/job-lifecycle
+  - https://docs.krea.ai/developers/api-keys-and-billing
+  - https://docs.krea.ai/realtime
+  - https://github.com/krea-ai
+  updated: '2026-05-25'
+created: '2026-05-25T00:00:00.000Z'
+modified: '2026-05-25'
+position: Consuming
+description: Krea is a real-time AI creative suite that lets designers, filmmakers, brand teams, and
+  everyday creators generate, edit, enhance, and animate images and videos with professional controls
+  from a single workspace. The Krea API at https://api.krea.ai exposes 50+ third-party and proprietary
+  image and video models — Flux, Imagen, Veo, Nano Banana, gpt-image, Runway, Kling, Seedream,
+  Seedance, Hailuo, Wan, Ray, Grok Imagine, Ideogram, Qwen, Z Image, Topaz, and more — through one
+  Bearer-token-authenticated REST surface with a unified async job lifecycle, compute-unit billing,
+  asset management, LoRA style training, Nodes workflow execution, and webhook delivery. Krea also
+  publishes open-source models including FLUX.1 Krea [dev] (in collaboration with Black Forest Labs)
+  and Krea Realtime 14B, a Self-Forcing distillation of Wan 2.1 that produces 11 fps text-to-video on
+  an NVIDIA B200.
+maintainers:
+- FN: Kin Lane
+  email: info@apievangelist.com
+  X: apievangelist
+  url: https://apievangelist.com
+specificationVersion: '0.16'
