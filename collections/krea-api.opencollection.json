@@ -1,0 +1,1622 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Krea API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "General",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List jobs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/jobs",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "ISO 8601 timestamp cursor for pagination (jobs created before this time)"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to return (1-1000, default: 100)"
+              },
+              {
+                "name": "types",
+                "value": "",
+                "type": "query",
+                "description": "Comma-separated list of job types to filter (e.g., \"flux,k1,externalImage\")"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by job status"
+              }
+            ]
+          },
+          "docs": "List jobs with pagination and filtering. Returns jobs belonging to the authenticated user."
+        },
+        {
+          "info": {
+            "name": "Get a job by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/jobs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a job"
+              }
+            ]
+          },
+          "docs": "Get a job by ID"
+        },
+        {
+          "info": {
+            "name": "Delete a job by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.krea.ai/jobs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a job"
+              }
+            ]
+          },
+          "docs": "Delete a job by ID"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Assets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List assets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/assets",
+            "params": [
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Number of items to return (1-1000, default: 100)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Cursor for pagination"
+              }
+            ]
+          },
+          "docs": "List assets with pagination."
+        },
+        {
+          "info": {
+            "name": "Upload an asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/assets",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "description",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload a new asset (image, video, audio, or 3D model). Accepts multipart/form-data with a file and optional description. Maximum file size: 75MB."
+        },
+        {
+          "info": {
+            "name": "Get an asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/assets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Asset ID"
+              }
+            ]
+          },
+          "docs": "Get a single asset by ID"
+        },
+        {
+          "info": {
+            "name": "Delete an asset",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.krea.ai/assets/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Asset ID"
+              }
+            ]
+          },
+          "docs": "Delete an asset."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Styles",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Train a custom style (LoRA)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/styles/train",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Train a custom style (LoRA) with simplified parameters. Uses intelligent defaults based on the training type (Default/Style/Object/Character).\n\n**Note:** Trained styles are private and only usable by the API user that created them. To allow other workspace members to use the style, share it with the workspace using `POST /styles/{id}/share/workspace`.\n| Model | Compute Units/Step |\n|-------|-------------------|\n| **qwen** | ~8.3 |\n| **wan22** | ~5.3 |\n| **flux_schnell** | ~3.4 |\n| **wan** | ~3.4"
+        },
+        {
+          "info": {
+            "name": "Search styles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/styles",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "liked",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "user",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "model",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List styles with pagination and filtering. Returns public styles, user-created styles, or shared styles based on the filter parameter."
+        },
+        {
+          "info": {
+            "name": "Get a single style by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/styles/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Get a single style by ID. Returns public styles or your own private styles."
+        },
+        {
+          "info": {
+            "name": "Update a style",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.krea.ai/styles/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update style properties. Currently supports updating the public visibility of a style you own."
+        },
+        {
+          "info": {
+            "name": "Get a shareable link for a style",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/styles/:id/share/link",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Generate or retrieve a shareable link for a style you own. The link allows others to access the style."
+        },
+        {
+          "info": {
+            "name": "Share a style with your workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/styles/:id/share/workspace",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Share a style you own with your API workspace. All members of the workspace will be able to use the style."
+        },
+        {
+          "info": {
+            "name": "Remove a style from your workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.krea.ai/styles/:id/share/workspace",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Remove a style you own from your API workspace. Workspace members will no longer have access to the style."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Node Apps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a node app by version ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/node-apps/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Node app version ID"
+              }
+            ]
+          },
+          "docs": "Get a single node app by version ID. Returns the node app details including input/output schemas."
+        },
+        {
+          "info": {
+            "name": "Execute a node app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/node-apps/:id/execute",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Node app version ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute a node app by version ID. The request body should contain the input data as a JSON object matching the node app's input schema. Returns a job that can be tracked using /jobs/{id}."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Image",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Flux",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bfl/flux-1-dev",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fast model. Best for LoRAs.\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~3 | ~7 seconds |\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n> - `presetStyles` -> `styles` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n> - `imageStyleRefs` -> `image_style_references` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Flux Kontext",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bfl/flux-1-kontext-dev",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model designed for image editing, optimized for Krea\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~6 | ~23 seconds |\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Nano Banana Pro",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/nano-banana-pro",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "World's most intelligent model.\n| Resolution | Compute Units |\n|------------|---------------|\n| 1K | 60.1 |\n| 2K | 60.1 |\n| 4K | 120 |\n> **Deprecated request fields:**\n>\n> - `imageUrls` -> `image_urls` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Nano Banana 2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/nano-banana-2",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cheaper quality version of Nano Banana.\n| Resolution | Compute Units |\n|------------|---------------|\n| 1K | 34.4 |\n| 2K | 57.8 |\n| 4K | 86.5 |\n> **Deprecated request fields:**\n>\n> - `imageUrls` -> `image_urls` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Nano Banana",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/nano-banana",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Most versatile intelligent model.\n| Compute Units |\n|---------------|\n| 22.3 |\n> **Deprecated request fields:**\n>\n> - `imageUrls` -> `image_urls` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Flux 1.1 Pro",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bfl/flux-1.1-pro",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Advanced yet efficent model from BFL.\n| Compute Units |\n|---------------|\n| 22.9 |"
+        },
+        {
+          "info": {
+            "name": "Flux 1.1 Pro Ultra",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bfl/flux-1.1-pro-ultra",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "BFL's highest quality text to image model.\n| Compute Units |\n|---------------|\n| 34.4 |"
+        },
+        {
+          "info": {
+            "name": "Ideogram 2.0A Turbo",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/ideogram/ideogram-2-turbo",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Distilled version of Ideogram 2.0\n| Compute Units |\n|---------------|\n| 14.3 |"
+        },
+        {
+          "info": {
+            "name": "Ideogram 3.0",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/ideogram/ideogram-3",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Highly aesthetic, general-purpose model.\n| Character Reference | Compute Units |\n|---------------------|---------------|\n| Yes | 85.9 |\n| No | 34.4 |\n> **Deprecated request fields:**\n>\n> - `characterReferenceImages` -> `character_reference_images` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Imagen 3",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/imagen-3",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Google's previous generation image model.\n| Model | Compute Units |\n|-------|---------------|\n| Standard | 22.9 |"
+        },
+        {
+          "info": {
+            "name": "Imagen 4",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/imagen-4",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Google's current generation image model\n| Compute Units |\n|---------------|\n| 22.9 |"
+        },
+        {
+          "info": {
+            "name": "Imagen 4 Fast",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/imagen-4-fast",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Google's fastest image model\n| Compute Units |\n|---------------|\n| 11.5 |"
+        },
+        {
+          "info": {
+            "name": "Imagen 4 Ultra",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/google/imagen-4-ultra",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Google's best image model\n| Compute Units |\n|---------------|\n| 34.4 |"
+        },
+        {
+          "info": {
+            "name": "Runway Gen-4",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/runway/gen-4-image",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cinematic image model with references.\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~44 | ~38 seconds |\n> **Deprecated request fields:**\n>\n> - `referenceImages` -> `reference_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "ChatGPT Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/openai/gpt-image",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Original ChatGPT image model.\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~179 | ~72 seconds |\n> **Deprecated request fields:**\n>\n> - `imageUrls` -> `image_urls` until 2026-06-19\n> - `presetStyles` -> `styles` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "ChatGPT 2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/openai/gpt-image-2",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Smart powerful model for editing.\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~127 | ~55 seconds |\n> **Deprecated request fields:**\n>\n> - `imageUrls` -> `image_urls` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Luma UNI-1",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/luma/uni-1",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Reasoning image model for prompt-faithful text to image.\n| Mode | Reference Images | Compute Units |\n|------|------------------|---------------|\n| standard | 0 | 23.1 |\n| standard | 1 | 24.9 |\n| standard | 2 | 26.6 |\n| standard | 3 | 28.3 |\n| standard | 4 | 30.0 |\n| standard | 5 | 31.7 |\n| standard | 6 | 33.4 |\n| standard | 7 | 35.2 |\n| standard | 8 | 36.9 |\n| standard | 9 | 38.6 |\n| max | 0 | 57.3 |\n| max | 1 | 59.0 |\n| max | 2 | 60.7 |\n| max | 3 | 62.4 |\n| max | 4 | 64.1 |\n| max | 5 | 65.9 |\n|"
+        },
+        {
+          "info": {
+            "name": "Seedream 4",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bytedance/seedream-4",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "New high quality model for photorealism and text rendering\n| Compute Units |\n|---------------|\n| 17.2 |\n> **Deprecated request fields:**\n>\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Seedream 5 Lite",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bytedance/seedream-5-lite",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Medium quality model with reasoning and web search.\n| Compute Units |\n|---------------|\n| 20.0 |\n> **Deprecated request fields:**\n>\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Qwen 2512",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/qwen/2512",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Affordable medium quality model.\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~9 | ~22 seconds |\n> **Deprecated request fields:**\n>\n> - `skipPromptExpansion` -> `skip_prompt_expansion` until 2026-06-19\n> - `presetStyles` -> `styles` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Z Image",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/z-image/z-image",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fastest model. Realistic, low diversity.\n| Compute Units | Average Completion Time |\n|---------------|-------------------------|\n| ~1 | ~5 seconds |\n> **Deprecated request fields:**\n>\n> - `presetStyles` -> `styles` until 2026-06-19\n> - `skipPromptExpansion` -> `skip_prompt_expansion` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `imageUrl` -> `image_url` until 2026-06-19\n> - `styleImages` -> `style_images` until 2026-06-19\n>\n> Deprecated fields are accepted for compat"
+        },
+        {
+          "info": {
+            "name": "SeedEdit",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/image/bytedance/seededit",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "New frontier model designed for image editing\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Image Enhance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Topaz Generative",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/enhance/topaz/generative-enhance",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Most powerful creative enhancer. Max 16K.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Topaz",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/enhance/topaz/standard-enhance",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Powerful faithful upscaler. Up to 22K resolution. Best for photos.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Topaz Bloom",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/enhance/topaz/bloom-enhance",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creative upscaler that adds new details. Max 10K.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Video",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Kling 1.0",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-1",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "High-control model with 10s duration.\n| Mode | Duration | Compute Units |\n|------|----------|---------------|\n| std | 5s | 60.1 |\n| std | 10s | 120 |\n| pro | 5s | 210 |\n| pro | 10s | 421 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `cameraControl` -> `camera_control` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n> - `endVideo` ->"
+        },
+        {
+          "info": {
+            "name": "Kling 1.5",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-1.5",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Slow, quality model for complex scenes.\n| Mode | Duration | Compute Units |\n|------|----------|---------------|\n| pro | 5s | 210 |\n| pro | 10s | 421 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `cameraControl` -> `camera_control` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n> - `endVideo` -> `end_video` until 2026-06-19\n>\n> Depr"
+        },
+        {
+          "info": {
+            "name": "Kling 1.6",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-1.6",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Previous gen model for complex scenes.\n| Mode | Duration | Compute Units |\n|------|----------|---------------|\n| std | 5s | 120 |\n| std | 10s | 241 |\n| pro | 5s | 210 |\n| pro | 10s | 421 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `cameraControl` -> `camera_control` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n> - `endVideo` ->"
+        },
+        {
+          "info": {
+            "name": "Kling 2.0",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-2",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "High-quality model with great aesthetics.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 802 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Kling 2.1",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-2.1",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model with 1080p resolution.\n| Mode | Duration | Compute Units |\n|------|----------|---------------|\n| std | 5s | 143 |\n| std | 10s | 286 |\n| pro | 5s | 258 |\n| pro | 10s | 515 |\n| master | 5s | 802 |\n| master | 10s | 1604 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n>\n> Deprecated fields are acc"
+        },
+        {
+          "info": {
+            "name": "Kling 2.5",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-2.5",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Improved dynamics and style adaptation.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 200 |\n| 10s | 401 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Kling 2.6",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-2.6",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model with native audio.\n| Audio | Duration | Compute Units |\n|-------|----------|---------------|\n| No | 5s | 200 |\n| No | 10s | 401 |\n| Yes | 5s | 401 |\n| Yes | 10s | 802 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n> - `endVideo` -> `end_video` until 2026-06-19\n> - `generateAudio` -> `generate"
+        },
+        {
+          "info": {
+            "name": "Kling 3.0",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-3.0",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model with audio and up to 15s.\n| Mode | Audio | Duration | Compute Units |\n|------|-------|----------|---------------|\n| std | No | 3s | 289 |\n| std | No | 4s | 385 |\n| std | No | 5s | 481 |\n| std | No | 6s | 577 |\n| std | No | 7s | 674 |\n| std | No | 8s | 770 |\n| std | No | 9s | 866 |\n| std | No | 10s | 962 |\n| std | No | 11s | 1058 |\n| std | No | 12s | 1155 |\n| std | No | 13s | 1251 |\n| std | No | 14s | 1347 |\n| std | No | 15s | 1443 |\n| std | Yes | 3s | 433 |\n| std | Yes | 4s | 577 "
+        },
+        {
+          "info": {
+            "name": "Kling o1",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/kling/kling-o1",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Intelligent model that thinks before generating.\n| Video Reference | Duration | Compute Units |\n|-----------------|----------|---------------|\n| No | 3s | 192 |\n| No | 4s | 257 |\n| No | 5s | 321 |\n| No | 6s | 385 |\n| No | 7s | 449 |\n| No | 8s | 513 |\n| No | 9s | 577 |\n| No | 10s | 641 |\n| Yes | 3s | 289 |\n| Yes | 4s | 385 |\n| Yes | 5s | 481 |\n| Yes | 6s | 577 |\n| Yes | 7s | 674 |\n| Yes | 8s | 770 |\n| Yes | 9s | 866 |\n| Yes | 10s | 962 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `sta"
+        },
+        {
+          "info": {
+            "name": "Hailuo",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/minimax/hailuo",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "High-quality model with camera control.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 246 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `expandPrompt` -> `expand_prompt` until 2026-06-19\n> - `cameraControl` -> `camera_control` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Hailuo 02",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/minimax/hailuo-02",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model with dynamic motion.\n| Resolution | Duration | Compute Units |\n|------------|----------|---------------|\n| 512p | 6s | 57.3 |\n| 512p | 7s | 180 |\n| 512p | 8s | 206 |\n| 512p | 9s | 232 |\n| 512p | 10s | 85.9 |\n| 768p | 6s | 155 |\n| 768p | 7s | 180 |\n| 768p | 8s | 206 |\n| 768p | 9s | 232 |\n| 768p | 10s | 258 |\n| 1080p | 6s | 309 |\n| 1080p | 7s | 361 |\n| 1080p | 8s | 412 |\n| 1080p | 9s | 464 |\n| 1080p | 10s | 515 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` u"
+        },
+        {
+          "info": {
+            "name": "Hailuo 2.3",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/minimax/hailuo-2.3",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model with dynamic motion.\n| Resolution | Duration | Compute Units |\n|------------|----------|---------------|\n| 768p | 6s | 160 |\n| 768p | 10s | 321 |\n| 1080p | 6s | 281 |\n| 1080p | 10s | 281 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `expandPrompt` -> `expand_prompt` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only"
+        },
+        {
+          "info": {
+            "name": "Hailuo 2.3 Fast",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/minimax/hailuo-2.3-fast",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cheapest medium-quality model.\n| Resolution | Duration | Compute Units |\n|------------|----------|---------------|\n| 768p | 6s | 109 |\n| 768p | 10s | 183 |\n| 1080p | 6s | 189 |\n| 1080p | 10s | 189 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `expandPrompt` -> `expand_prompt` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and "
+        },
+        {
+          "info": {
+            "name": "Wan 2.1",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/alibaba/wan-2.1",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fastest low-quality model with LoRA.\n| Duration | Compute Units | Average Completion Time |\n|----------|---------------|-------------------------|\n| - | ~270 | ~97 seconds |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n> - `endVideo` -> `end_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `presetStyles` -> `styles` until 2026-"
+        },
+        {
+          "info": {
+            "name": "Wan 2.2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/alibaba/wan-2.2",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fast, lower-quality model from Alibaba.\n| Duration | Compute Units | Average Completion Time |\n|----------|---------------|-------------------------|\n| - | ~287 | ~113 seconds |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `endVideo` -> `end_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `presetStyles` -> `styles` until 2026-06-19\n>\n> Deprecated fields are accepted fo"
+        },
+        {
+          "info": {
+            "name": "Wan 2.5",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/alibaba/wan-2.5",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Latest medium quality model from Alibaba.\n| Resolution | Duration | Compute Units |\n|------------|----------|---------------|\n| 480p | 5s | 143 |\n| 480p | 6s | 172 |\n| 480p | 7s | 200 |\n| 480p | 8s | 229 |\n| 480p | 9s | 258 |\n| 480p | 10s | 286 |\n| 720p | 5s | 286 |\n| 720p | 6s | 344 |\n| 720p | 7s | 401 |\n| 720p | 8s | 458 |\n| 720p | 9s | 515 |\n| 720p | 10s | 573 |\n| 1080p | 5s | 430 |\n| 1080p | 6s | 515 |\n| 1080p | 7s | 601 |\n| 1080p | 8s | 687 |\n| 1080p | 9s | 773 |\n| 1080p | 10s | 859 |\n> **D"
+        },
+        {
+          "info": {
+            "name": "Veo 2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/google/veo-2",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Expensive high-quality model from Google.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 1432 |\n| 6s | 1718 |\n| 7s | 2005 |\n| 8s | 2291 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `image_url` -> `start_image` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Veo 3",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/google/veo-3",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Older version of Veo 3.1.\n| Resolution | Audio | Duration | Compute Units |\n|------------|-------|----------|---------------|\n| 720p | No | 5s | 573 |\n| 720p | No | 6s | 687 |\n| 720p | No | 7s | 802 |\n| 720p | No | 8s | 916 |\n| 720p | Yes | 5s | 1145 |\n| 720p | Yes | 6s | 1375 |\n| 720p | Yes | 7s | 1604 |\n| 720p | Yes | 8s | 1833 |\n| 1080p | No | 5s | 573 |\n| 1080p | No | 6s | 687 |\n| 1080p | No | 7s | 802 |\n| 1080p | No | 8s | 916 |\n| 1080p | Yes | 5s | 1145 |\n| 1080p | Yes | 6s | 1375 |\n| 1080"
+        },
+        {
+          "info": {
+            "name": "Veo 3 Fast",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/google/veo-3-fast",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Faster, affordable Veo 3 with audio.\n| Resolution | Audio | Duration | Compute Units |\n|------------|-------|----------|---------------|\n| 720p | No | 5s | 286 |\n| 720p | No | 6s | 344 |\n| 720p | No | 7s | 401 |\n| 720p | No | 8s | 458 |\n| 720p | Yes | 5s | 430 |\n| 720p | Yes | 6s | 515 |\n| 720p | Yes | 7s | 601 |\n| 720p | Yes | 8s | 687 |\n| 1080p | No | 5s | 286 |\n| 1080p | No | 6s | 344 |\n| 1080p | No | 7s | 401 |\n| 1080p | No | 8s | 458 |\n| 1080p | Yes | 5s | 430 |\n| 1080p | Yes | 6s | 515 |\n|"
+        },
+        {
+          "info": {
+            "name": "Veo 3.1",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/google/veo-3.1",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Best video model. Highest quality with audio.\n| Resolution | Audio | Duration | Compute Units |\n|------------|-------|----------|---------------|\n| 720p | No | 4s | 458 |\n| 720p | No | 6s | 687 |\n| 720p | No | 8s | 916 |\n| 720p | Yes | 4s | 916 |\n| 720p | Yes | 6s | 1375 |\n| 720p | Yes | 8s | 1833 |\n| 1080p | No | 4s | 458 |\n| 1080p | No | 6s | 687 |\n| 1080p | No | 8s | 916 |\n| 1080p | Yes | 4s | 916 |\n| 1080p | Yes | 6s | 1375 |\n| 1080p | Yes | 8s | 1833 |\n| 4K | No | 4s | 916 |\n| 4K | No | 6s "
+        },
+        {
+          "info": {
+            "name": "Veo 3.1 Fast",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/google/veo-3.1-fast",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Faster, affordable Veo 3.1 with audio.\n| Resolution | Audio | Duration | Compute Units |\n|------------|-------|----------|---------------|\n| 720p | No | 4s | 183 |\n| 720p | No | 6s | 275 |\n| 720p | No | 8s | 367 |\n| 720p | Yes | 4s | 229 |\n| 720p | Yes | 6s | 344 |\n| 720p | Yes | 8s | 458 |\n| 1080p | No | 4s | 229 |\n| 1080p | No | 6s | 344 |\n| 1080p | No | 8s | 458 |\n| 1080p | Yes | 4s | 275 |\n| 1080p | Yes | 6s | 412 |\n| 1080p | Yes | 8s | 550 |\n| 4K | No | 4s | 573 |\n| 4K | No | 6s | 859 |\n| 4"
+        },
+        {
+          "info": {
+            "name": "Veo 3.1 Lite",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/google/veo-3.1-lite",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Faster, affordable Veo 3.1.\n| Resolution | Duration | Compute Units |\n|------------|----------|---------------|\n| 720p | 4s | 68.7 |\n| 720p | 6s | 103 |\n| 720p | 8s | 137 |\n| 1080p | 4s | 115 |\n| 1080p | 6s | 172 |\n| 1080p | 8s | 229 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `endImage` -> `end_image` until 2026-06-19\n> - `endVideo` -> `end_vide"
+        },
+        {
+          "info": {
+            "name": "Seedance Pro",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/bytedance/seedance-1.0-pro",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fast, high-quality model from ByteDance.\n| Resolution | Duration | Compute Units | Average Completion Time |\n|------------|----------|---------------|-------------------------|\n| 1080p | 5s | ~487 | ~78 seconds |\n| 720p | 5s | ~207 | ~57 seconds |\n| 1080p | 10s | ~947 | ~133 seconds |\n| 720p | 10s | ~389 | ~88 seconds |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until"
+        },
+        {
+          "info": {
+            "name": "Seedance Pro Fast",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/bytedance/seedance-1.0-pro-fast",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fast and cheap model. Up to 12 seconds.\n| Resolution | Duration | Compute Units | Average Completion Time |\n|------------|----------|---------------|-------------------------|\n| 1080p | 2s | ~79 | ~32 seconds |\n| 480p | 2s | ~16 | ~22 seconds |\n| 720p | 2s | ~34 | ~27 seconds |\n| 480p | 3s | ~23 | ~23 seconds |\n| 720p | 3s | ~50 | ~29 seconds |\n| 1080p | 4s | ~157 | ~44 seconds |\n| 480p | 4s | ~31 | ~28 seconds |\n| 720p | 4s | ~67 | ~35 seconds |\n| 1080p | 5s | ~196 | ~50 seconds |\n| 480p | 5s |"
+        },
+        {
+          "info": {
+            "name": "LTX-2.3 22B",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/lightricks/ltx-video-2.3-22b",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "High-quality audio-video model from Lightricks.\n| LoRA | Duration | Compute Units |\n|------|----------|---------------|\n| No | 5s | 103 |\n| No | 10s | 205 |\n| No | 15s | 306 |\n| No | 20s | 408 |\n| Yes | 5s | 116 |\n| Yes | 10s | 231 |\n| Yes | 15s | 344 |\n| Yes | 20s | 459 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n> - `generateAudio` -> `generate_aud"
+        },
+        {
+          "info": {
+            "name": "Ray 2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/luma/ray-2",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Older model with natural motion.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 229 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Runway Gen-3",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/runway/gen-3",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Old cinematic model, higher consistency.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 143 |\n| 10s | 286 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Runway Gen-4",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/runway/gen-4-video",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cinematic visuals, weaker structure.\n| Duration | Compute Units |\n|----------|---------------|\n| 5s | 143 |\n| 10s | 286 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Runway Gen-4.5",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/runway/gen-4.5",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Frontier model with native text-to-video.\n| Duration | Compute Units |\n|----------|---------------|\n| 2s | 137 |\n| 3s | 206 |\n| 4s | 275 |\n| 5s | 344 |\n| 6s | 412 |\n| 7s | 481 |\n| 8s | 550 |\n| 9s | 619 |\n| 10s | 687 |\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n> - `aspectRatio` -> `aspect_ratio` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request s"
+        },
+        {
+          "info": {
+            "name": "Grok Imagine",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/xai/grok-video",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Fast, high-quality video generation by xAI.\n| Resolution | Duration | Compute Units |\n|------------|----------|---------------|\n| 480p | 1s | 28.6 |\n| 480p | 2s | 57.3 |\n| 480p | 3s | 85.9 |\n| 480p | 4s | 115 |\n| 480p | 5s | 143 |\n| 480p | 6s | 172 |\n| 480p | 7s | 200 |\n| 480p | 8s | 229 |\n| 480p | 9s | 258 |\n| 480p | 10s | 286 |\n| 480p | 11s | 315 |\n| 480p | 12s | 344 |\n| 480p | 13s | 372 |\n| 480p | 14s | 401 |\n| 480p | 15s | 430 |\n| 720p | 1s | 40.1 |\n| 720p | 2s | 80.2 |\n| 720p | 3s | 120 |\n|"
+        },
+        {
+          "info": {
+            "name": "Runway Aleph",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/video/runway/aleph",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Runway's Gen-4 Aleph model for advanced video-to-video transformation\n> **Deprecated request fields:**\n>\n> - `startImage` -> `start_image` until 2026-06-19\n> - `startVideo` -> `start_video` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
