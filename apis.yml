@@ -200,6 +200,12 @@ kind: contract
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 access: 3rd-Party
 common:
+- type: TrustCenter
+  url: security/krea-ai-trust-center.yml
+- type: DomainSecurity
+  url: security/krea-ai-domain-security.yml
+- type: Authentication
+  url: authentication/krea-ai-authentication.yml
 - type: Portal
   url: https://www.krea.ai
 - type: Documentation
@@ -475,6 +481,8 @@ common:
   - https://docs.krea.ai/realtime
   - https://github.com/krea-ai
   updated: '2026-05-25'
+- url: https://www.krea.ai/blog
+  type: Blog
 created: '2026-05-25T00:00:00.000Z'
 modified: '2026-05-25'
 position: Consuming

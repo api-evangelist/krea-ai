@@ -1,0 +1,12 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://trust.krea.ai/
+url: https://trust.krea.ai/
+certifications:
+- SOC 2
+evidence:
+- source: https://trust.krea.ai/
+  keywords:
+  - soc2
+  - trust center

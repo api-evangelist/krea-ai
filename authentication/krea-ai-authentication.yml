@@ -1,0 +1,13 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/krea-api-openapi.json
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: Bearer
+  sources:
+  - openapi/krea-api-openapi.json
