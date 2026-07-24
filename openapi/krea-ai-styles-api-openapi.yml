@@ -1,0 +1,835 @@
+openapi: 3.1.0
+info:
+  title: Krea Assets Styles API
+  version: v1
+  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Styles
+  description: Style (LoRA) generation and management endpoints
+paths:
+  /styles/train:
+    post:
+      tags:
+      - Styles
+      summary: Train a custom style (LoRA)
+      description: 'Train a custom style (LoRA) with simplified parameters. Uses intelligent defaults based on the training type (Default/Style/Object/Character).
+
+
+        **Note:** Trained styles are private and only usable by the API user that created them. To allow other workspace members to use the style, share it with the workspace using `POST /styles/{id}/share/workspace`.
+
+        | Model | Compute Units/Step |
+
+        |-------|-------------------|
+
+        | **qwen** | ~8.3 |
+
+        | **wan22** | ~5.3 |
+
+        | **flux_schnell** | ~3.4 |
+
+        | **wan** | ~3.4 |
+
+        | **flux_dev** | ~3.0 |
+
+        | **z-image** | ~2.4 |'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - type: object
+                properties:
+                  model:
+                    type: string
+                    enum:
+                    - flux_dev
+                    - flux_schnell
+                    - wan
+                    - wan22
+                    default: flux_dev
+                  type:
+                    type: string
+                    enum:
+                    - Style
+                    - Object
+                    - Character
+                    - Default
+                    default: Default
+                  name:
+                    type: string
+                  urls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                  trigger_word:
+                    type: string
+                  learning_rate:
+                    type: number
+                  max_train_steps:
+                    type: integer
+                    minimum: 1
+                    maximum: 2000
+                  batch_size:
+                    type: integer
+                    minimum: 1
+                required:
+                - name
+                - urls
+              - type: object
+                properties:
+                  model:
+                    type: string
+                    enum:
+                    - qwen
+                    - z-image
+                  type:
+                    type: string
+                    enum:
+                    - Style
+                    - Object
+                    - Character
+                    default: Style
+                  name:
+                    type: string
+                  urls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                  trigger_word:
+                    type: string
+                  max_train_steps:
+                    type: integer
+                    minimum: 1
+                    maximum: 2000
+                required:
+                - model
+                - name
+                - urls
+      responses:
+        '200':
+          description: Training job created successfully. The job will be in a pending state until completed. Use /jobs/{id} to check progress.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '402':
+          description: Insufficient credits
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '429':
+          description: Maximum number of concurrent jobs reached
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /styles:
+    get:
+      tags:
+      - Styles
+      summary: Search styles
+      description: List styles with pagination and filtering. Returns public styles, user-created styles, or shared styles based on the filter parameter.
+      parameters:
+      - in: query
+        name: cursor
+        schema:
+          type: string
+      - in: query
+        name: limit
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+      - in: query
+        name: ids
+        schema:
+          type: string
+      - in: query
+        name: liked
+        schema:
+          type: boolean
+          default: false
+      - in: query
+        name: user
+        schema:
+          type: string
+      - in: query
+        name: model
+        schema:
+          type: string
+      - in: query
+        name: filter
+        schema:
+          type: string
+          enum:
+          - all
+          - user
+          - community
+          - krea
+          - shared
+          - unapproved
+          - editor
+          - gallery
+          - public
+          default: all
+      responses:
+        '200':
+          description: List of styles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier for the style
+                        title:
+                          type:
+                          - string
+                          - 'null'
+                          description: Name of the style
+                        urls:
+                          type: array
+                          items:
+                            type: string
+                            format: uri
+                          description: Portrait-oriented preview URLs
+                        public:
+                          type: boolean
+                          description: Whether the style is publicly visible
+                        cover_url:
+                          type:
+                          - string
+                          - 'null'
+                          format: uri
+                          description: Cover image URL
+                        prompt:
+                          type: string
+                          description: Suggested prompt for using this style
+                        models:
+                          type: array
+                          items:
+                            type: string
+                          description: Compatible model names (e.g., flux_dev, wan)
+                        owner:
+                          type:
+                          - object
+                          - 'null'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            avatar_url:
+                              type:
+                              - string
+                              - 'null'
+                              format: uri
+                          required:
+                          - id
+                          - name
+                          description: Style creator info (null for Krea-official styles)
+                        like_count:
+                          type: number
+                          description: Number of likes
+                        created_at:
+                          type: string
+                          description: Creation timestamp
+                      required:
+                      - id
+                      - title
+                      - urls
+                      - public
+                      - prompt
+                      - owner
+                      - like_count
+                      - created_at
+                      description: Style response schema
+                  next_cursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - items
+                - next_cursor
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /styles/{id}:
+    get:
+      tags:
+      - Styles
+      summary: Get a single style by ID
+      description: Get a single style by ID. Returns public styles or your own private styles.
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a style
+        schema:
+          type: string
+          description: A unique identifier for a style
+          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+        required: true
+      responses:
+        '200':
+          description: Style details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the style
+                  title:
+                    type:
+                    - string
+                    - 'null'
+                    description: Name of the style
+                  urls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                    description: Portrait-oriented preview URLs
+                  public:
+                    type: boolean
+                    description: Whether the style is publicly visible
+                  cover_url:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                    description: Cover image URL
+                  prompt:
+                    type: string
+                    description: Suggested prompt for using this style
+                  models:
+                    type: array
+                    items:
+                      type: string
+                    description: Compatible model names (e.g., flux_dev, wan)
+                  owner:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      avatar_url:
+                        type:
+                        - string
+                        - 'null'
+                        format: uri
+                    required:
+                    - id
+                    - name
+                    description: Style creator info (null for Krea-official styles)
+                  like_count:
+                    type: number
+                    description: Number of likes
+                  created_at:
+                    type: string
+                    description: Creation timestamp
+                required:
+                - id
+                - title
+                - urls
+                - public
+                - prompt
+                - owner
+                - like_count
+                - created_at
+                description: Style response schema
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Style not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+    patch:
+      tags:
+      - Styles
+      summary: Update a style
+      description: Update style properties. Currently supports updating the public visibility of a style you own.
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a style
+        schema:
+          type: string
+          description: A unique identifier for a style
+          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                public:
+                  type:
+                  - boolean
+                  - 'null'
+                urls:
+                  type: array
+                  items:
+                    type: string
+                    format: uri
+                title:
+                  type: string
+                cover_url:
+                  type: string
+      responses:
+        '200':
+          description: Style updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the style
+                  title:
+                    type:
+                    - string
+                    - 'null'
+                    description: Name of the style
+                  urls:
+                    type: array
+                    items:
+                      type: string
+                      format: uri
+                    description: Portrait-oriented preview URLs
+                  public:
+                    type: boolean
+                    description: Whether the style is publicly visible
+                  cover_url:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                    description: Cover image URL
+                  prompt:
+                    type: string
+                    description: Suggested prompt for using this style
+                  models:
+                    type: array
+                    items:
+                      type: string
+                    description: Compatible model names (e.g., flux_dev, wan)
+                  owner:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
+                      avatar_url:
+                        type:
+                        - string
+                        - 'null'
+                        format: uri
+                    required:
+                    - id
+                    - name
+                    description: Style creator info (null for Krea-official styles)
+                  like_count:
+                    type: number
+                    description: Number of likes
+                  created_at:
+                    type: string
+                    description: Creation timestamp
+                required:
+                - id
+                - title
+                - urls
+                - public
+                - prompt
+                - owner
+                - like_count
+                - created_at
+                description: Style response schema
+        '400':
+          description: No valid fields to update
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Style not found or you are not the owner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /styles/{id}/share/link:
+    get:
+      tags:
+      - Styles
+      summary: Get a shareable link for a style
+      description: Generate or retrieve a shareable link for a style you own. The link allows others to access the style.
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a style
+        schema:
+          type: string
+          description: A unique identifier for a style
+          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+        required: true
+      responses:
+        '200':
+          description: Shareable link retrieved (existing link)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  share_link:
+                    type: string
+                    format: uri
+                    description: Shareable URL for the style
+                  is_new:
+                    type: boolean
+                    description: Whether the share link is new
+                required:
+                - share_link
+                - is_new
+                description: Response containing a shareable link for a style
+        '201':
+          description: Shareable link created (new link)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  share_link:
+                    type: string
+                    format: uri
+                    description: Shareable URL for the style
+                  is_new:
+                    type: boolean
+                    description: Whether the share link is new
+                required:
+                - share_link
+                - is_new
+                description: Response containing a shareable link for a style
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Style not found or you are not the owner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /styles/{id}/share/workspace:
+    post:
+      tags:
+      - Styles
+      summary: Share a style with your workspace
+      description: Share a style you own with your API workspace. All members of the workspace will be able to use the style.
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a style
+        schema:
+          type: string
+          description: A unique identifier for a style
+          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+        required: true
+      responses:
+        '200':
+          description: Style shared with workspace successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether the operation succeeded
+                  style_id:
+                    type: string
+                    description: The ID of the shared style
+                  workspace:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Workspace ID
+                      name:
+                        type:
+                        - string
+                        - 'null'
+                        description: Workspace name
+                      is_default:
+                        type: boolean
+                        description: Whether this is the default workspace
+                    required:
+                    - id
+                    - name
+                    - is_default
+                    description: The workspace the style was shared with
+                required:
+                - success
+                - style_id
+                - workspace
+                description: Response after sharing a style within a workspace
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '403':
+          description: You do not own this style or are not a member of the workspace
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Style not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+    delete:
+      tags:
+      - Styles
+      summary: Remove a style from your workspace
+      description: Remove a style you own from your API workspace. Workspace members will no longer have access to the style.
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a style
+        schema:
+          type: string
+          description: A unique identifier for a style
+          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+        required: true
+      responses:
+        '200':
+          description: Style removed from workspace successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                required:
+                - success
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '403':
+          description: You do not own this style
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Style not found or not shared with this workspace
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

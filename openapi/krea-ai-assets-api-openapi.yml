@@ -1,0 +1,327 @@
+openapi: 3.1.0
+info:
+  title: Krea Assets API
+  version: v1
+  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Assets
+  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+paths:
+  /assets:
+    post:
+      tags:
+      - Assets
+      summary: Upload an asset
+      description: 'Upload a new asset (image, video, audio, or 3D model). Accepts multipart/form-data with a file and optional description. Maximum file size: 75MB.'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: 'The file to upload (JPEG, PNG, WebP, HEIC, MP4, MOV, WebM, GLB, WAV, MP3). Maximum size: 75MB.'
+                  format: binary
+                description:
+                  type: string
+                  description: Optional description for the asset
+              required:
+              - file
+      responses:
+        '200':
+          description: Asset uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  image_url:
+                    type: string
+                    format: uri
+                  uploaded_at:
+                    type: string
+                    format: date-time
+                  width:
+                    type:
+                    - number
+                    - 'null'
+                  height:
+                    type:
+                    - number
+                    - 'null'
+                  size_bytes:
+                    type:
+                    - number
+                    - 'null'
+                  mime_type:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type: string
+                  metadata: {}
+                required:
+                - id
+                - image_url
+                - uploaded_at
+                - width
+                - height
+                - size_bytes
+                - mime_type
+        '400':
+          description: Invalid file type or size
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+    get:
+      tags:
+      - Assets
+      summary: List assets
+      description: List assets with pagination.
+      parameters:
+      - in: query
+        name: limit
+        description: 'Number of items to return (1-1000, default: 100)'
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          description: 'Number of items to return (1-1000, default: 100)'
+      - in: query
+        name: cursor
+        description: Cursor for pagination
+        schema:
+          type: string
+          format: date-time
+          description: Cursor for pagination
+      responses:
+        '200':
+          description: List of assets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        image_url:
+                          type: string
+                          format: uri
+                        uploaded_at:
+                          type: string
+                          format: date-time
+                        width:
+                          type:
+                          - number
+                          - 'null'
+                        height:
+                          type:
+                          - number
+                          - 'null'
+                        size_bytes:
+                          type:
+                          - number
+                          - 'null'
+                        mime_type:
+                          type:
+                          - string
+                          - 'null'
+                        description:
+                          type: string
+                        metadata: {}
+                      required:
+                      - id
+                      - image_url
+                      - uploaded_at
+                      - width
+                      - height
+                      - size_bytes
+                      - mime_type
+                  next_cursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - items
+                - next_cursor
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /assets/{id}:
+    get:
+      tags:
+      - Assets
+      summary: Get an asset
+      description: Get a single asset by ID
+      parameters:
+      - in: path
+        name: id
+        description: Asset ID
+        schema:
+          type: string
+          format: uuid
+          description: Asset ID
+        required: true
+      responses:
+        '200':
+          description: Asset details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  image_url:
+                    type: string
+                    format: uri
+                  uploaded_at:
+                    type: string
+                    format: date-time
+                  width:
+                    type:
+                    - number
+                    - 'null'
+                  height:
+                    type:
+                    - number
+                    - 'null'
+                  size_bytes:
+                    type:
+                    - number
+                    - 'null'
+                  mime_type:
+                    type:
+                    - string
+                    - 'null'
+                  description:
+                    type: string
+                  metadata: {}
+                required:
+                - id
+                - image_url
+                - uploaded_at
+                - width
+                - height
+                - size_bytes
+                - mime_type
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Asset not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+    delete:
+      tags:
+      - Assets
+      summary: Delete an asset
+      description: Delete an asset.
+      parameters:
+      - in: path
+        name: id
+        description: Asset ID
+        schema:
+          type: string
+          format: uuid
+          description: Asset ID
+        required: true
+      responses:
+        '200':
+          description: Asset deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                required:
+                - success
+                - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Asset not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

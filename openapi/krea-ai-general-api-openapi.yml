@@ -1,0 +1,237 @@
+openapi: 3.1.0
+info:
+  title: Krea Assets General API
+  version: v1
+  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: General
+  description: Core API operations including job management and billing information
+paths:
+  /jobs:
+    get:
+      tags:
+      - General
+      summary: List jobs
+      description: List jobs with pagination and filtering. Returns jobs belonging to the authenticated user.
+      parameters:
+      - in: query
+        name: cursor
+        description: ISO 8601 timestamp cursor for pagination (jobs created before this time)
+        schema:
+          type: string
+          format: date-time
+          description: ISO 8601 timestamp cursor for pagination (jobs created before this time)
+      - in: query
+        name: limit
+        description: 'Number of items to return (1-1000, default: 100)'
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 100
+          description: 'Number of items to return (1-1000, default: 100)'
+      - in: query
+        name: types
+        description: Comma-separated list of job types to filter (e.g., "flux,k1,externalImage")
+        schema:
+          type: string
+          description: Comma-separated list of job types to filter (e.g., "flux,k1,externalImage")
+      - in: query
+        name: status
+        description: Filter by job status
+        schema:
+          type: string
+          enum:
+          - backlogged
+          - queued
+          - scheduled
+          - processing
+          - sampling
+          - intermediate-complete
+          - completed
+          - failed
+          - cancelled
+          description: Filter by job status
+      responses:
+        '200':
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        job_id:
+                          type: string
+                          format: uuid
+                        status:
+                          type: string
+                          enum:
+                          - backlogged
+                          - queued
+                          - scheduled
+                          - processing
+                          - sampling
+                          - intermediate-complete
+                          - completed
+                          - failed
+                          - cancelled
+                        created_at:
+                          type: string
+                          format: date-time
+                        completed_at:
+                          type: string
+                          format: date-time
+                        result:
+                          type: object
+                          properties:
+                            urls:
+                              type: array
+                              items:
+                                type: string
+                                format: uri
+                            style_id:
+                              type: string
+                      required:
+                      - job_id
+                      - status
+                      - created_at
+                  next_cursor:
+                    type:
+                    - string
+                    - 'null'
+                required:
+                - items
+                - next_cursor
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /jobs/{id}:
+    get:
+      tags:
+      - General
+      summary: Get a job by ID
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a job
+        schema:
+          type: string
+          description: A unique identifier for a job
+          example: 4d0e5f97-9721-4422-b88c-73a9032d7de1
+        required: true
+      responses:
+        '200':
+          description: The most up-to-date state of the job. You can check when the job is completed by checking the `status` field. For completed loraTraining jobs, the result will include a `style_id` field.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                  completed_at:
+                    type: string
+                    format: date-time
+                  result:
+                    type: object
+                    properties:
+                      urls:
+                        type: array
+                        items:
+                          type: string
+                          format: uri
+                      style_id:
+                        type: string
+                required:
+                - job_id
+                - status
+                - created_at
+        '404':
+          description: The job was not found or the client is not authorized to see it
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+    delete:
+      tags:
+      - General
+      summary: Delete a job by ID
+      parameters:
+      - in: path
+        name: id
+        description: A unique identifier for a job
+        schema:
+          type: string
+          description: A unique identifier for a job
+          example: 4d0e5f97-9721-4422-b88c-73a9032d7de1
+        required: true
+      responses:
+        '200':
+          description: The job was deleted successfully
+        '404':
+          description: The job was not found or the client is not authorized to delete it
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

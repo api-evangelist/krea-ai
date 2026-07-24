@@ -1,0 +1,309 @@
+openapi: 3.1.0
+info:
+  title: Krea Assets Node Apps API
+  version: v1
+  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Node Apps
+  description: Executing custom node apps built in our nodes tool
+paths:
+  /node-apps/{id}:
+    get:
+      tags:
+      - Node Apps
+      summary: Get a node app by version ID
+      description: Get a single node app by version ID. Returns the node app details including input/output schemas.
+      parameters:
+      - in: path
+        name: id
+        description: Node app version ID
+        schema:
+          type: string
+          description: Node app version ID
+        required: true
+      responses:
+        '200':
+          description: Node app details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the node app
+                  author_id:
+                    type: string
+                    description: ID of the node app author
+                  workspace_id:
+                    type: string
+                    description: ID of the workspace that owns the node app
+                  name:
+                    type: string
+                    description: Name of the node app
+                  slug:
+                    type: string
+                    description: URL-friendly identifier for the node app
+                  description:
+                    type: string
+                    description: Description of the node app
+                  scope:
+                    type: string
+                    description: 'Visibility scope: "public", "user", or "workspace"'
+                  created_at:
+                    type: string
+                    description: Creation timestamp
+                  updated_at:
+                    type: string
+                    description: Last update timestamp
+                  last_version_id:
+                    type: string
+                    description: ID of the latest version of the node app
+                  version:
+                    type: number
+                    description: Selected node app version number
+                  version_created_at:
+                    type:
+                    - string
+                    - 'null'
+                    description: Creation timestamp of the latest version
+                  username:
+                    type: string
+                    description: Username of the node app creator
+                  example_outputs:
+                    type:
+                    - array
+                    - 'null'
+                    items:
+                      type: string
+                    description: Example output URLs
+                  input_openapi_schema:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      type:
+                        type: string
+                        const: object
+                      properties:
+                        type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties: true
+                      required:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - type
+                    - properties
+                    description: OpenAPI 3.1 JSON Schema for input parameters
+                  output_openapi_schema:
+                    type:
+                    - object
+                    - 'null'
+                    properties:
+                      type:
+                        type: string
+                        const: object
+                      properties:
+                        type: object
+                        additionalProperties:
+                          type: object
+                          additionalProperties: true
+                      required:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                    - type
+                    - properties
+                    description: OpenAPI 3.1 JSON Schema for output values
+                  input_key_mapping:
+                    type:
+                    - object
+                    - 'null'
+                    additionalProperties:
+                      type: string
+                    description: Maps OpenAPI input keys to internal keys for execution
+                  output_key_mapping:
+                    type:
+                    - object
+                    - 'null'
+                    additionalProperties:
+                      type: string
+                    description: Maps internal output keys (nodeId-handleId) to API keys
+                required:
+                - id
+                - author_id
+                - workspace_id
+                - name
+                - slug
+                - description
+                - scope
+                - created_at
+                - updated_at
+                - last_version_id
+                - version
+                - version_created_at
+                - username
+                - example_outputs
+                - input_openapi_schema
+                - output_openapi_schema
+                - input_key_mapping
+                - output_key_mapping
+                description: Node app response schema
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Node app not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+  /node-apps/{id}/execute:
+    post:
+      tags:
+      - Node Apps
+      summary: Execute a node app
+      description: Execute a node app by version ID. The request body should contain the input data as a JSON object matching the node app's input schema. Returns a job that can be tracked using /jobs/{id}.
+      parameters:
+      - in: path
+        name: id
+        description: Node app version ID
+        schema:
+          type: string
+          description: Node app version ID
+        required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Input data for the node app execution, matching the node app's input schema
+      responses:
+        '200':
+          description: Execution job created successfully. The job will be in a processing state until completed. Use /jobs/{id} to check progress.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    job_id:
+                      type: string
+                      format: uuid
+                    status:
+                      type: string
+                      enum:
+                      - backlogged
+                      - queued
+                      - scheduled
+                      - processing
+                      - sampling
+                      - intermediate-complete
+                      - completed
+                      - failed
+                      - cancelled
+                    created_at:
+                      type: string
+                      format: date-time
+                    completed_at:
+                      type: string
+                      format: date-time
+                    result:
+                      type: object
+                      properties:
+                        urls:
+                          type: array
+                          items:
+                            type: string
+                            format: uri
+                        style_id:
+                          type: string
+                  required:
+                  - job_id
+                  - status
+                  - created_at
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '404':
+          description: Node app version not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http
