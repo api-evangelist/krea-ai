@@ -1,0 +1,26 @@
+{
+  "provider": "krea-ai",
+  "sources": [
+    "krea-ai-assets-api-openapi.yml",
+    "krea-ai-general-api-openapi.yml",
+    "krea-ai-image-api-openapi.yml",
+    "krea-ai-image-enhance-api-openapi.yml",
+    "krea-ai-node-apps-api-openapi.yml",
+    "krea-ai-styles-api-openapi.yml",
+    "krea-ai-video-api-openapi.yml"
+  ],
+  "outputs": [
+    "krea-ai-assets-api-openapi.yml",
+    "krea-ai-general-api-openapi.yml",
+    "krea-ai-image-api-openapi.yml",
+    "krea-ai-image-enhance-api-openapi.yml",
+    "krea-ai-node-apps-api-openapi.yml",
+    "krea-ai-styles-api-openapi.yml",
+    "krea-ai-video-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
