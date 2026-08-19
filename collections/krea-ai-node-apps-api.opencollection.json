@@ -1,0 +1,66 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Krea Assets Node Apps API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Node Apps",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get a node app by version ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/node-apps/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Node app version ID"
+              }
+            ]
+          },
+          "docs": "Get a single node app by version ID. Returns the node app details including input/output schemas."
+        },
+        {
+          "info": {
+            "name": "Execute a node app",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/node-apps/:id/execute",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Node app version ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Execute a node app by version ID. The request body should contain the input data as a JSON object matching the node app's input schema. Returns a job that can be tracked using /jobs/{id}."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

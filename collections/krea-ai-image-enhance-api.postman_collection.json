@@ -1,0 +1,1112 @@
+{
+  "item": [
+    {
+      "id": "d08aa324-df6a-4b70-abe5-367364dc3792",
+      "name": "Image Enhance",
+      "description": {
+        "content": "Image enhance endpoints",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "6d59d661-601a-4922-99ff-5f53c3f21504",
+          "name": "Topaz Generative",
+          "request": {
+            "name": "Topaz Generative",
+            "description": {
+              "content": "Most powerful creative enhancer. Max 16K.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "generate",
+                "enhance",
+                "topaz",
+                "generative-enhance"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                "key": "X-Webhook-URL",
+                "value": "<uri>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"width\": \"<number>\",\n  \"height\": \"<number>\",\n  \"image_url\": \"<uri>\",\n  \"prompt\": \"\",\n  \"seed\": 1337,\n  \"model\": \"Redefine\",\n  \"output_format\": \"jpg\",\n  \"subject_detection\": \"All\",\n  \"face_enhancement\": false,\n  \"face_enhancement_creativity\": 0.5,\n  \"face_enhancement_strength\": 0.5,\n  \"crop_to_fill\": false,\n  \"upscaling_activated\": false,\n  \"image_scaling_factor\": 1,\n  \"creativity\": 3,\n  \"texture\": 3,\n  \"sharpen\": 0.5,\n  \"denoise\": 0.5,\n  \"detail\": 0.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "aaab1c40-2ec8-45f4-900c-e775b1d3e8a0",
+              "name": "The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "generative-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"job_id\": \"9d6d0cb5-b2da-131b-bb73-dd0af6a266c8\",\n  \"status\": \"backlogged\",\n  \"created_at\": \"2003-11-01T16:02:08.190Z\",\n  \"completed_at\": null,\n  \"result\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5c1168aa-e111-411c-ba3c-a99c732d2865",
+              "name": "The request body is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "generative-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "917bfb6d-2114-47c7-934f-dfb10e79ab46",
+              "name": "You are not authenticated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "generative-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "74b784f6-3be6-4b8b-9370-8d9e01136484",
+              "name": "You have run out of credits.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "generative-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "855ce48b-5802-4a22-b4f2-e417a947b76d",
+              "name": "You have reached the maximum number of concurrent jobs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "generative-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e0e181e7-8568-4d1a-b7f5-2569cf54e221",
+          "name": "Topaz",
+          "request": {
+            "name": "Topaz",
+            "description": {
+              "content": "Powerful faithful upscaler. Up to 22K resolution. Best for photos.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "generate",
+                "enhance",
+                "topaz",
+                "standard-enhance"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                "key": "X-Webhook-URL",
+                "value": "<uri>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"width\": \"<number>\",\n  \"height\": \"<number>\",\n  \"image_url\": \"<uri>\",\n  \"model\": \"<string>\",\n  \"prompt\": \"\",\n  \"seed\": 1337,\n  \"output_format\": \"jpg\",\n  \"subject_detection\": \"All\",\n  \"face_enhancement\": false,\n  \"face_enhancement_creativity\": 0.5,\n  \"face_enhancement_strength\": 0.5,\n  \"crop_to_fill\": false,\n  \"upscaling_activated\": false,\n  \"image_scaling_factor\": 1,\n  \"sharpen\": 0.5,\n  \"denoise\": 0.5,\n  \"fix_compression\": 0.5,\n  \"strength\": 0.5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8505bf5f-3fa7-4cc9-af69-d26b7a9533bf",
+              "name": "The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "standard-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"job_id\": \"9d6d0cb5-b2da-131b-bb73-dd0af6a266c8\",\n  \"status\": \"backlogged\",\n  \"created_at\": \"2003-11-01T16:02:08.190Z\",\n  \"completed_at\": null,\n  \"result\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c5d3fe2f-4405-4ec2-82bb-df0932f40f18",
+              "name": "The request body is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "standard-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fde17f5b-60e4-4e76-9635-9c80f065e5ad",
+              "name": "You are not authenticated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "standard-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f2bd7a8e-e922-4b45-870f-4a62bb19e536",
+              "name": "You have run out of credits.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "standard-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0ae2d9b1-3aa3-48c4-8aea-1013b9cd83d8",
+              "name": "You have reached the maximum number of concurrent jobs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "standard-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d74f3f67-3ba5-4925-acb0-153abaf75daf",
+          "name": "Topaz Bloom",
+          "request": {
+            "name": "Topaz Bloom",
+            "description": {
+              "content": "Creative upscaler that adds new details. Max 10K.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "generate",
+                "enhance",
+                "topaz",
+                "bloom-enhance"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "disabled": false,
+                "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                "key": "X-Webhook-URL",
+                "value": "<uri>"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"width\": \"<number>\",\n  \"height\": \"<number>\",\n  \"image_url\": \"<uri>\",\n  \"model\": \"<string>\",\n  \"prompt\": \"\",\n  \"seed\": 1337,\n  \"output_format\": \"jpg\",\n  \"crop_to_fill\": false,\n  \"creativity\": 3,\n  \"face_preservation\": false,\n  \"color_preservation\": false,\n  \"upscaling_activated\": false,\n  \"image_scaling_factor\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "2504eb33-7cf0-4b6d-8dfc-5bd2dcbb0545",
+              "name": "The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "bloom-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"job_id\": \"9d6d0cb5-b2da-131b-bb73-dd0af6a266c8\",\n  \"status\": \"backlogged\",\n  \"created_at\": \"2003-11-01T16:02:08.190Z\",\n  \"completed_at\": null,\n  \"result\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5f193094-8074-488c-9a9d-fedd01b9e235",
+              "name": "The request body is invalid.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "bloom-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e9ec6726-ec5b-416a-820b-b243fa584fcb",
+              "name": "You are not authenticated.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "bloom-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f30de269-acab-47f0-8c3b-ed6b31ec575e",
+              "name": "You have run out of credits.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "bloom-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Payment Required",
+              "code": 402,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f9c9874e-de1e-4aeb-bc90-4c02294b6627",
+              "name": "You have reached the maximum number of concurrent jobs.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "generate",
+                    "enhance",
+                    "topaz",
+                    "bloom-enhance"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "disabled": false,
+                    "description": "URL to receive a POST request when the job completes. The webhook will receive the job data including results.",
+                    "key": "X-Webhook-URL",
+                    "value": "<uri>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"width\": 1024,\n  \"height\": 1024,\n  \"image_url\": \"https://gen.krea.ai/images/0424f602-2999-4d0c-a46e-39cbf0ef384b.png\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.krea.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "22f41c2b-469c-4a4f-9fb8-d4a5453747df",
+    "name": "Krea Assets Image Enhance API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Asset management endpoints for uploading and managing images, videos, audio files, and 3D models",
+      "type": "text/plain"
+    }
+  }
+}

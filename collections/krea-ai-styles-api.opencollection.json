@@ -1,0 +1,192 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Krea Assets Styles API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Styles",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Train a custom style (LoRA)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/styles/train",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Train a custom style (LoRA) with simplified parameters. Uses intelligent defaults based on the training type (Default/Style/Object/Character).\n\n**Note:** Trained styles are private and only usable by the API user that created them. To allow other workspace members to use the style, share it with the workspace using `POST /styles/{id}/share/workspace`.\n| Model | Compute Units/Step |\n|-------|-------------------|\n| **qwen** | ~8.3 |\n| **wan22** | ~5.3 |\n| **flux_schnell** | ~3.4 |\n| **wan** | ~3.4"
+        },
+        {
+          "info": {
+            "name": "Search styles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/styles",
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "ids",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "liked",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "user",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "model",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "filter",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "List styles with pagination and filtering. Returns public styles, user-created styles, or shared styles based on the filter parameter."
+        },
+        {
+          "info": {
+            "name": "Get a single style by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/styles/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Get a single style by ID. Returns public styles or your own private styles."
+        },
+        {
+          "info": {
+            "name": "Update a style",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.krea.ai/styles/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update style properties. Currently supports updating the public visibility of a style you own."
+        },
+        {
+          "info": {
+            "name": "Get a shareable link for a style",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.krea.ai/styles/:id/share/link",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Generate or retrieve a shareable link for a style you own. The link allows others to access the style."
+        },
+        {
+          "info": {
+            "name": "Share a style with your workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/styles/:id/share/workspace",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Share a style you own with your API workspace. All members of the workspace will be able to use the style."
+        },
+        {
+          "info": {
+            "name": "Remove a style from your workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.krea.ai/styles/:id/share/workspace",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "A unique identifier for a style"
+              }
+            ]
+          },
+          "docs": "Remove a style you own from your API workspace. Workspace members will no longer have access to the style."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

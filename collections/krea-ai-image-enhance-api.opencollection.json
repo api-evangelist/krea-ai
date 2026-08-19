@@ -1,0 +1,87 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Krea Assets Image Enhance API",
+    "version": "v1"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Image Enhance",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Topaz Generative",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/enhance/topaz/generative-enhance",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Most powerful creative enhancer. Max 16K.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Topaz",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/enhance/topaz/standard-enhance",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Powerful faithful upscaler. Up to 22K resolution. Best for photos.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        },
+        {
+          "info": {
+            "name": "Topaz Bloom",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.krea.ai/generate/enhance/topaz/bloom-enhance",
+            "headers": [
+              {
+                "name": "X-Webhook-URL",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creative upscaler that adds new details. Max 10K.\n> **Deprecated request fields:**\n>\n> - `imageUrl` -> `image_url` until 2026-06-19\n>\n> Deprecated fields are accepted for compatibility only and are not shown in the request schema.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
