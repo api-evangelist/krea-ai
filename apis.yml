@@ -61,7 +61,8 @@ apis:
   description: Core API operations including job management and billing information
   humanURL: https://docs.krea.ai/api-reference/introduction
   baseURL: https://api.krea.ai
-  tags:
+  tags: []
+  tags_raw:
   - General
   properties:
   - type: OpenAPI
@@ -382,6 +383,16 @@ apis:
     url: https://docs.krea.ai/api-reference/node-apps/execute-a-node-app
 name: Krea
 tags:
+- Artificial Intelligence
+- Image-Generation
+- Video Generation
+- Generative AI
+- Real-Time
+- Multi-Modal
+- Creative Tools
+- 3D
+- Upscaling
+tags_raw:
 - AI
 - Artificial Intelligence
 - Image Generation
