@@ -1,0 +1,26 @@
+slug: krea-ai
+provider: Krea
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Media, Entertainment & Telecom Content
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Assets
+  spec_file: krea-ai-assets-api-openapi.yml
+  capability_id: BC-3710
+  capability_id_l1: BC-3710
+  capability_name: Media Asset Management
+  confidence: 0.7
+  evidence: '"Asset management endpoints for uploading and managing images, videos, audio files, and 3D
+    models"; "Upload an asset", "List assets", "Delete an asset"'
+  reason: Operations are ingest, listing and lifecycle of media assets (image, video, audio, 3D), which
+    is media asset management at L1. No evidence of QC, tiering or metadata cataloguing specifically,
+    so no L2 chosen.

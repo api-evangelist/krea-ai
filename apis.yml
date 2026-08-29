@@ -431,6 +431,9 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/krea-ai.png
 access: 3rd-Party
 common:
+- type: CapabilityMap
+  url: capabilities/krea-ai-capability-edges.yml
+  name: Krea Business Capability Map
 - type: AgenticAccess
   url: agentic-access/krea-ai-agentic-access.yml
 - type: TrustCenter
