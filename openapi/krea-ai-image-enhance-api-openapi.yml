@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Krea Assets Image Enhance API
+  title: Krea Image Enhance API
   version: v1
-  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+  description: Image enhance endpoints
 servers:
 - url: https://api.krea.ai
   description: Krea API
@@ -26,9 +26,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Topaz Generative
       x-krea-deprecated-field-aliases:
       - from: imageUrl
@@ -227,6 +225,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateEnhanceTopazGenerativeEnhance
+      x-operation-id-source: derived
   /generate/enhance/topaz/standard-enhance:
     post:
       tags:
@@ -241,9 +241,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Topaz
       x-krea-deprecated-field-aliases:
       - from: imageUrl
@@ -438,6 +436,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateEnhanceTopazStandardEnhance
+      x-operation-id-source: derived
   /generate/enhance/topaz/bloom-enhance:
     post:
       tags:
@@ -452,9 +452,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Topaz Bloom
       x-krea-deprecated-field-aliases:
       - from: imageUrl
@@ -615,6 +613,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateEnhanceTopazBloomEnhance
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:

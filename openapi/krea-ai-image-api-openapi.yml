@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Krea Assets Image API
+  title: Krea Image API
   version: v1
-  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+  description: Image generation endpoints
 servers:
 - url: https://api.krea.ai
   description: Krea API
@@ -38,9 +38,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Flux
       x-krea-deprecated-field-aliases:
       - from: imageUrl
@@ -241,6 +239,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBflFlux1Dev
+      x-operation-id-source: derived
   /generate/image/bfl/flux-1-kontext-dev:
     post:
       tags:
@@ -263,9 +263,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Flux Kontext
       x-krea-deprecated-field-aliases:
       - from: imageUrl
@@ -427,6 +425,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBflFlux1KontextDev
+      x-operation-id-source: derived
   /generate/image/google/nano-banana-pro:
     post:
       tags:
@@ -455,9 +455,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Nano Banana Pro
       x-krea-deprecated-field-aliases:
       - from: imageUrls
@@ -624,6 +622,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleNanoBananaPro
+      x-operation-id-source: derived
   /generate/image/google/nano-banana-2:
     post:
       tags:
@@ -652,9 +652,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Nano Banana 2
       x-krea-deprecated-field-aliases:
       - from: imageUrls
@@ -824,6 +822,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleNanoBanana2
+      x-operation-id-source: derived
   /generate/image/google/nano-banana:
     post:
       tags:
@@ -848,9 +848,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Nano Banana
       x-krea-deprecated-field-aliases:
       - from: imageUrls
@@ -1010,6 +1008,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleNanoBanana
+      x-operation-id-source: derived
   /generate/image/bfl/flux-1.1-pro:
     post:
       tags:
@@ -1139,6 +1139,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBflFlux11Pro
+      x-operation-id-source: derived
   /generate/image/bfl/flux-1.1-pro-ultra:
     post:
       tags:
@@ -1269,6 +1271,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBflFlux11ProUltra
+      x-operation-id-source: derived
   /generate/image/ideogram/ideogram-2-turbo:
     post:
       tags:
@@ -1396,6 +1400,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageIdeogramIdeogram2Turbo
+      x-operation-id-source: derived
   /generate/image/ideogram/ideogram-3:
     post:
       tags:
@@ -1420,9 +1426,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Ideogram 3.0
       x-krea-deprecated-field-aliases:
       - from: characterReferenceImages
@@ -1570,6 +1574,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageIdeogramIdeogram3
+      x-operation-id-source: derived
   /generate/image/google/imagen-3:
     post:
       tags:
@@ -1697,6 +1703,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleImagen3
+      x-operation-id-source: derived
   /generate/image/google/imagen-4:
     post:
       tags:
@@ -1824,6 +1832,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleImagen4
+      x-operation-id-source: derived
   /generate/image/google/imagen-4-fast:
     post:
       tags:
@@ -1951,6 +1961,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleImagen4Fast
+      x-operation-id-source: derived
   /generate/image/google/imagen-4-ultra:
     post:
       tags:
@@ -2078,6 +2090,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageGoogleImagen4Ultra
+      x-operation-id-source: derived
   /generate/image/runway/gen-4-image:
     post:
       tags:
@@ -2098,9 +2112,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Runway Gen-4
       x-krea-deprecated-field-aliases:
       - from: referenceImages
@@ -2243,6 +2255,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageRunwayGen4Image
+      x-operation-id-source: derived
   /generate/image/openai/gpt-image:
     post:
       tags:
@@ -2267,9 +2281,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: ChatGPT Image
       x-krea-deprecated-field-aliases:
       - from: imageUrls
@@ -2442,6 +2454,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageOpenaiGptImage
+      x-operation-id-source: derived
   /generate/image/openai/gpt-image-2:
     post:
       tags:
@@ -2464,9 +2478,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: ChatGPT 2
       x-krea-deprecated-field-aliases:
       - from: imageUrls
@@ -2618,6 +2630,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageOpenaiGptImage2
+      x-operation-id-source: derived
   /generate/image/luma/uni-1:
     post:
       tags:
@@ -2680,9 +2694,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Luma UNI-1
       x-krea-deprecated-field-aliases:
       - from: outputFormat
@@ -2852,6 +2864,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageLumaUni1
+      x-operation-id-source: derived
   /generate/image/bytedance/seedream-4:
     post:
       tags:
@@ -2872,9 +2886,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Seedream 4
       x-krea-deprecated-field-aliases:
       - from: styleImages
@@ -3012,6 +3024,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBytedanceSeedream4
+      x-operation-id-source: derived
   /generate/image/bytedance/seedream-5-lite:
     post:
       tags:
@@ -3032,9 +3046,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Seedream 5 Lite
       x-krea-deprecated-field-aliases:
       - from: styleImages
@@ -3173,6 +3185,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBytedanceSeedream5Lite
+      x-operation-id-source: derived
   /generate/image/qwen/2512:
     post:
       tags:
@@ -3195,9 +3209,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Qwen 2512
       x-krea-deprecated-field-aliases:
       - from: skipPromptExpansion
@@ -3345,6 +3357,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageQwen2512
+      x-operation-id-source: derived
   /generate/image/z-image/z-image:
     post:
       tags:
@@ -3373,9 +3387,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Z Image
       x-krea-deprecated-field-aliases:
       - from: presetStyles
@@ -3568,6 +3580,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageZImageZImage
+      x-operation-id-source: derived
   /generate/image/bytedance/seededit:
     post:
       tags:
@@ -3582,9 +3596,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: SeedEdit
       x-krea-deprecated-field-aliases:
       - from: imageUrl
@@ -3702,6 +3714,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateImageBytedanceSeededit
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:

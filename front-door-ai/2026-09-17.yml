@@ -1,0 +1,36 @@
+# Front Door AI Index — krea-ai — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: krea-ai
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.krea.ai
+  final_host: www.krea.ai
+  ownership: own
+  owner: krea-ai
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 54
+  host_score: 54
+  density: 39.33
+  words: 1373
+  tiers:
+    agentic: 10
+    core: 37
+    model: 7
+  ambiguous: 8
+  top_terms:
+    AI: 36
+    agent: 8
+    prompts: 5
+    Gemini: 3
+    MCP: 2
+    fine-tune: 2
+    AI agent: 1
+    ChatGPT: 1
+    Claude: 1
+    GPT: 1
+    Hugging Face: 1
+    generative ai: 1

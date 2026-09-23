@@ -1,8 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Krea Assets Video API
+  title: Krea Video API
   version: v1
-  description: Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+  description: Video generation endpoints
 servers:
 - url: https://api.krea.ai
   description: Krea API
@@ -48,9 +48,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 1.0
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -294,6 +292,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling1
+      x-operation-id-source: derived
   /generate/video/kling/kling-1.5:
     post:
       tags:
@@ -326,9 +326,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 1.5
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -570,6 +568,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling15
+      x-operation-id-source: derived
   /generate/video/kling/kling-1.6:
     post:
       tags:
@@ -606,9 +606,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 1.6
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -852,6 +850,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling16
+      x-operation-id-source: derived
   /generate/video/kling/kling-2:
     post:
       tags:
@@ -878,9 +878,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 2.0
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -1032,6 +1030,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling2
+      x-operation-id-source: derived
   /generate/video/kling/kling-2.1:
     post:
       tags:
@@ -1068,9 +1068,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 2.1
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -1225,6 +1223,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling21
+      x-operation-id-source: derived
   /generate/video/kling/kling-2.5:
     post:
       tags:
@@ -1253,9 +1253,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 2.5
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -1408,6 +1406,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling25
+      x-operation-id-source: derived
   /generate/video/kling/kling-2.6:
     post:
       tags:
@@ -1444,9 +1444,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 2.6
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -1610,6 +1608,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling26
+      x-operation-id-source: derived
   /generate/video/kling/kling-3.0:
     post:
       tags:
@@ -1794,9 +1794,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling 3.0
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -1978,6 +1976,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKling30
+      x-operation-id-source: derived
   /generate/video/kling/kling-o1:
     post:
       tags:
@@ -2040,9 +2040,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Kling o1
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -2254,6 +2252,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoKlingKlingO1
+      x-operation-id-source: derived
   /generate/video/minimax/hailuo:
     post:
       tags:
@@ -2280,9 +2280,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Hailuo
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -2447,6 +2445,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoMinimaxHailuo
+      x-operation-id-source: derived
   /generate/video/minimax/hailuo-02:
     post:
       tags:
@@ -2501,9 +2501,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Hailuo 02
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -2657,6 +2655,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoMinimaxHailuo02
+      x-operation-id-source: derived
   /generate/video/minimax/hailuo-2.3:
     post:
       tags:
@@ -2689,9 +2689,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Hailuo 2.3
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -2846,6 +2844,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoMinimaxHailuo23
+      x-operation-id-source: derived
   /generate/video/minimax/hailuo-2.3-fast:
     post:
       tags:
@@ -2878,9 +2878,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Hailuo 2.3 Fast
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -3035,6 +3033,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoMinimaxHailuo23Fast
+      x-operation-id-source: derived
   /generate/video/alibaba/wan-2.1:
     post:
       tags:
@@ -3065,9 +3065,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Wan 2.1
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -3251,6 +3249,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoAlibabaWan21
+      x-operation-id-source: derived
   /generate/video/alibaba/wan-2.2:
     post:
       tags:
@@ -3279,9 +3279,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Wan 2.2
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -3462,6 +3460,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoAlibabaWan22
+      x-operation-id-source: derived
   /generate/video/alibaba/wan-2.5:
     post:
       tags:
@@ -3524,9 +3524,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Wan 2.5
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -3696,6 +3694,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoAlibabaWan25
+      x-operation-id-source: derived
   /generate/video/google/veo-2:
     post:
       tags:
@@ -3728,9 +3728,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Veo 2
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -3875,6 +3873,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoGoogleVeo2
+      x-operation-id-source: derived
   /generate/video/google/veo-3:
     post:
       tags:
@@ -3931,9 +3931,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Veo 3
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -4090,6 +4088,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoGoogleVeo3
+      x-operation-id-source: derived
   /generate/video/google/veo-3-fast:
     post:
       tags:
@@ -4146,9 +4146,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Veo 3 Fast
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -4305,6 +4303,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoGoogleVeo3Fast
+      x-operation-id-source: derived
   /generate/video/google/veo-3.1:
     post:
       tags:
@@ -4371,9 +4371,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Veo 3.1
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -4560,6 +4558,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoGoogleVeo31
+      x-operation-id-source: derived
   /generate/video/google/veo-3.1-fast:
     post:
       tags:
@@ -4626,9 +4626,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Veo 3.1 Fast
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -4815,6 +4813,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoGoogleVeo31Fast
+      x-operation-id-source: derived
   /generate/video/google/veo-3.1-lite:
     post:
       tags:
@@ -4853,9 +4853,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Veo 3.1 Lite
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -5023,6 +5021,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoGoogleVeo31Lite
+      x-operation-id-source: derived
   /generate/video/bytedance/seedance-1.0-pro:
     post:
       tags:
@@ -5059,9 +5059,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Seedance Pro
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -5241,6 +5239,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoBytedanceSeedance10Pro
+      x-operation-id-source: derived
   /generate/video/bytedance/seedance-1.0-pro-fast:
     post:
       tags:
@@ -5311,9 +5311,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Seedance Pro Fast
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -5465,6 +5463,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoBytedanceSeedance10ProFast
+      x-operation-id-source: derived
   /generate/video/lightricks/ltx-video-2.3-22b:
     post:
       tags:
@@ -5511,9 +5511,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: LTX-2.3 22B
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -5714,6 +5712,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoLightricksLtxVideo2322b
+      x-operation-id-source: derived
   /generate/video/luma/ray-2:
     post:
       tags:
@@ -5738,9 +5738,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Ray 2
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -5891,6 +5889,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoLumaRay2
+      x-operation-id-source: derived
   /generate/video/runway/gen-3:
     post:
       tags:
@@ -5917,9 +5917,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Runway Gen-3
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -6061,6 +6059,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoRunwayGen3
+      x-operation-id-source: derived
   /generate/video/runway/gen-4-video:
     post:
       tags:
@@ -6087,9 +6087,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Runway Gen-4
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -6231,6 +6229,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoRunwayGen4Video
+      x-operation-id-source: derived
   /generate/video/runway/gen-4.5:
     post:
       tags:
@@ -6271,9 +6271,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Runway Gen-4.5
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -6418,6 +6416,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoRunwayGen45
+      x-operation-id-source: derived
   /generate/video/xai/grok-video:
     post:
       tags:
@@ -6504,9 +6504,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Grok Imagine
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -6676,6 +6674,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoXaiGrokVideo
+      x-operation-id-source: derived
   /generate/video/runway/aleph:
     post:
       tags:
@@ -6692,9 +6692,7 @@ paths:
 
         >
 
-        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.
-
-        '
+        > Deprecated fields are accepted for compatibility only and are not shown in the request schema.'
       summary: Runway Aleph
       x-krea-deprecated-field-aliases:
       - from: startImage
@@ -6858,6 +6856,8 @@ paths:
                     type: string
                 required:
                 - error
+      operationId: postGenerateVideoRunwayAleph
+      x-operation-id-source: derived
 components:
   securitySchemes:
     bearerAuth:
