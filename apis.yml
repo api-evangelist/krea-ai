@@ -384,7 +384,7 @@ apis:
 name: Krea
 tags:
 - Artificial Intelligence
-- Image-Generation
+- Image Generation
 - Video Generation
 - Generative AI
 - Real-Time
@@ -403,6 +403,7 @@ tags_raw:
 - Creative Tools
 - 3D
 - Upscaling
+- Image-Generation
 kind: contract
 deliveryModel:
   model: saas
