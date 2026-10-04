@@ -1,5 +1,8 @@
 aid: krea-ai
 url: https://raw.githubusercontent.com/api-evangelist/krea-ai/refs/heads/main/apis.yml
+x-docs-platform: mintlify
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 apis:
 - aid: krea-ai:krea-ai-assets-api
   name: Krea Assets API
