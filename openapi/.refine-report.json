@@ -1,32 +1,30 @@
 {
   "provider": "krea-ai",
   "sources": [
-    "_original/krea-api-openapi.json"
+    "_original/krea-ai-openapi.json"
   ],
   "outputs": [
+    "krea-ai-3d-api-openapi.yml",
     "krea-ai-assets-api-openapi.yml",
+    "krea-ai-audio-api-openapi.yml",
     "krea-ai-general-api-openapi.yml",
     "krea-ai-image-api-openapi.yml",
     "krea-ai-image-enhance-api-openapi.yml",
+    "krea-ai-krea-api-openapi.yml",
     "krea-ai-node-apps-api-openapi.yml",
     "krea-ai-styles-api-openapi.yml",
-    "krea-ai-video-api-openapi.yml"
+    "krea-ai-usage-api-openapi.yml",
+    "krea-ai-utilities-api-openapi.yml",
+    "krea-ai-video-api-openapi.yml",
+    "krea-ai-video-enhance-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
   "notes": [
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
-    "krea-api-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "apis.yml register: already-registered"
+    "krea-ai-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: written (+6 apis, 13 total)"
   ],
-  "skipped": [
-    "krea-ai-assets-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "krea-ai-general-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "krea-ai-image-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "krea-ai-image-enhance-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "krea-ai-node-apps-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "krea-ai-styles-api-openapi.yml: previously refined output, superseded by openapi/_original/",
-    "krea-ai-video-api-openapi.yml: previously refined output, superseded by openapi/_original/"
-  ]
+  "skipped": []
 }

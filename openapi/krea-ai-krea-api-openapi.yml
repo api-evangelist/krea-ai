@@ -1,0 +1,1164 @@
+openapi: 3.2.0
+info:
+  title: Krea API
+  version: v1
+  description: Krea-owned generation models including Krea 2
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Krea
+  description: Krea-owned generation models including Krea 2
+paths:
+  /generate/image/krea/krea-2/medium:
+    post:
+      tags:
+      - Krea
+      description: Best for expressive illustrations.
+      summary: Krea 2 Medium
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.03
+          dimensions:
+            k2BillingTier: text-to-image
+        - amount: 0.035
+          dimensions:
+            k2BillingTier: srefs
+        - amount: 0.04
+          dimensions:
+            k2BillingTier: moodboards
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          | K2 Billing Tier | Price |
+
+          | --- | ---: |
+
+          | Text to image | $0.03 |
+
+          | Style references | $0.035 |
+
+          | Moodboards | $0.04 |
+
+
+          <Accordion title="Deprecated request aliases">
+
+          These aliases are accepted for compatibility only and are not shown in the request schema.
+
+
+          | Deprecated | Use instead | Accepted until |
+
+          | --- | --- | --- |
+
+          | `presetStyles` | `styles` | 2026-06-19 |
+
+          | `imageStyleRefs` | `image_style_references` | 2026-06-19 |
+
+          </Accordion>'
+      x-krea-deprecated-field-aliases:
+      - from: presetStyles
+        to: styles
+        sunset_date: '2026-06-19'
+        reason: Public API request fields are moving to snake_case.
+        migration_url: https://docs.krea.ai/developers/deprecations#public-api-snake-case-fields
+      - from: imageStyleRefs
+        to: image_style_references
+        sunset_date: '2026-06-19'
+        reason: Public API request fields are moving to snake_case.
+        migration_url: https://docs.krea.ai/developers/deprecations#public-api-snake-case-fields
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      - name: X-Api-Zero-Data-Retention
+        in: header
+        required: false
+        schema:
+          type: string
+          enum:
+          - '1'
+        description: Enable Zero Data Retention for this request. Refer to the [documentation](/developers/zdr).
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: Luminous lagoon, mermaids singing enchantments, echoing serene and magical anime aesthetics.
+              aspect_ratio: '1:1'
+              resolution: 1K
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type:
+                  - number
+                  - 'null'
+                styles:
+                  description: Styles (typically LoRAs) to use for the generation
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      strength:
+                        type: number
+                        minimum: -2
+                        maximum: 2
+                    required:
+                    - id
+                    - strength
+                image_style_references:
+                  description: Image style references. (0 = no style influence, 1 = maximum). Default 0.5.
+                  maxItems: 10
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      strength:
+                        default: 0.5
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                      url:
+                        type: string
+                        maxLength: 1024
+                        format: uri
+                        description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                    required:
+                    - url
+                aspect_ratio:
+                  type: string
+                  enum:
+                  - '1:1'
+                  - '4:3'
+                  - '3:2'
+                  - '16:9'
+                  - 2.35:1
+                  - '4:5'
+                  - '3:4'
+                  - '2:3'
+                  - '9:16'
+                  description: 'Aspect ratio. One of: 1:1, 4:3, 3:2, 16:9, 2.35:1, 4:5, 3:4, 2:3, 9:16.'
+                resolution:
+                  type: string
+                  enum:
+                  - 1K
+                  description: 'Resolution scale. One of: 1K.'
+                creativity:
+                  default: low
+                  description: Prompt expansion mode. `raw` disables prompt expansion; `low`, `medium`, and `high` control expansion strength. This does not affect the K2 Intensity, Complexity, or Movement slider LoRAs.
+                  type: string
+                  enum:
+                  - raw
+                  - low
+                  - medium
+                  - high
+                intensity:
+                  default: 0
+                  description: K2 Intensity slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                complexity:
+                  default: 0
+                  description: K2 Complexity slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                movement:
+                  default: 0
+                  description: K2 Movement slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                moodboards:
+                  description: Moodboards to use for generation. Currently limited to one moodboard.
+                  maxItems: 1
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      strength:
+                        default: 0.23
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                    required:
+                    - id
+                image_url:
+                  description: Optional source image for image-to-image generation. When provided, generation starts from this image instead of pure noise. Control how much it changes with `strength`.
+                  anyOf:
+                  - type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                  - type: 'null'
+                strength:
+                  default: 0.99
+                  description: Denoising strength when `image_url` is provided. 0 keeps the input image, 1 fully replaces it (the input image is ignored). Has no effect without `image_url`. Default 0.99.
+                  type: number
+                  minimum: 0
+                  maximum: 1
+              required:
+              - prompt
+              - aspect_ratio
+              - resolution
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateImageKreaKrea2Medium
+      x-operation-id-source: derived
+  /generate/image/krea/krea-2/large:
+    post:
+      tags:
+      - Krea
+      description: Best for expressive photorealism.
+      summary: Krea 2 Large
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.06
+          dimensions:
+            k2BillingTier: text-to-image
+        - amount: 0.065
+          dimensions:
+            k2BillingTier: srefs
+        - amount: 0.07
+          dimensions:
+            k2BillingTier: moodboards
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          | K2 Billing Tier | Price |
+
+          | --- | ---: |
+
+          | Text to image | $0.06 |
+
+          | Style references | $0.065 |
+
+          | Moodboards | $0.07 |
+
+
+          <Accordion title="Deprecated request aliases">
+
+          These aliases are accepted for compatibility only and are not shown in the request schema.
+
+
+          | Deprecated | Use instead | Accepted until |
+
+          | --- | --- | --- |
+
+          | `presetStyles` | `styles` | 2026-06-19 |
+
+          | `imageStyleRefs` | `image_style_references` | 2026-06-19 |
+
+          </Accordion>'
+      x-krea-deprecated-field-aliases:
+      - from: presetStyles
+        to: styles
+        sunset_date: '2026-06-19'
+        reason: Public API request fields are moving to snake_case.
+        migration_url: https://docs.krea.ai/developers/deprecations#public-api-snake-case-fields
+      - from: imageStyleRefs
+        to: image_style_references
+        sunset_date: '2026-06-19'
+        reason: Public API request fields are moving to snake_case.
+        migration_url: https://docs.krea.ai/developers/deprecations#public-api-snake-case-fields
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      - name: X-Api-Zero-Data-Retention
+        in: header
+        required: false
+        schema:
+          type: string
+          enum:
+          - '1'
+        description: Enable Zero Data Retention for this request. Refer to the [documentation](/developers/zdr).
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: A bustling harbor in Hong Kong, junks and ferries crisscrossing with the skyline backdrop.
+              aspect_ratio: '1:1'
+              resolution: 1K
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type:
+                  - number
+                  - 'null'
+                styles:
+                  description: Styles (typically LoRAs) to use for the generation
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      strength:
+                        type: number
+                        minimum: -2
+                        maximum: 2
+                    required:
+                    - id
+                    - strength
+                image_style_references:
+                  description: Image style references. (0 = no style influence, 1 = maximum). Default 0.5.
+                  maxItems: 10
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      strength:
+                        default: 0.5
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                      url:
+                        type: string
+                        maxLength: 1024
+                        format: uri
+                        description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                    required:
+                    - url
+                aspect_ratio:
+                  type: string
+                  enum:
+                  - '1:1'
+                  - '4:3'
+                  - '3:2'
+                  - '16:9'
+                  - 2.35:1
+                  - '4:5'
+                  - '3:4'
+                  - '2:3'
+                  - '9:16'
+                  description: 'Aspect ratio. One of: 1:1, 4:3, 3:2, 16:9, 2.35:1, 4:5, 3:4, 2:3, 9:16.'
+                resolution:
+                  type: string
+                  enum:
+                  - 1K
+                  description: 'Resolution scale. One of: 1K.'
+                creativity:
+                  default: low
+                  description: Prompt expansion mode. `raw` disables prompt expansion; `low`, `medium`, and `high` control expansion strength. This does not affect the K2 Intensity, Complexity, or Movement slider LoRAs.
+                  type: string
+                  enum:
+                  - raw
+                  - low
+                  - medium
+                  - high
+                intensity:
+                  default: 0
+                  description: K2 Intensity slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                complexity:
+                  default: 0
+                  description: K2 Complexity slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                movement:
+                  default: 0
+                  description: K2 Movement slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                moodboards:
+                  description: Moodboards to use for generation. Currently limited to one moodboard.
+                  maxItems: 1
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      strength:
+                        default: 0.23
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                    required:
+                    - id
+                image_url:
+                  description: Optional source image for image-to-image generation. When provided, generation starts from this image instead of pure noise. Control how much it changes with `strength`.
+                  anyOf:
+                  - type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                  - type: 'null'
+                strength:
+                  default: 0.99
+                  description: Denoising strength when `image_url` is provided. 0 keeps the input image, 1 fully replaces it (the input image is ignored). Has no effect without `image_url`. Default 0.99.
+                  type: number
+                  minimum: 0
+                  maximum: 1
+              required:
+              - prompt
+              - aspect_ratio
+              - resolution
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateImageKreaKrea2Large
+      x-operation-id-source: derived
+  /generate/image/krea/krea-2/medium-turbo:
+    post:
+      tags:
+      - Krea
+      description: Fastest medium quality Krea 2 model.
+      summary: Krea 2 Turbo
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.015
+          dimensions:
+            k2BillingTier: text-to-image
+        - amount: 0.0175
+          dimensions:
+            k2BillingTier: srefs
+        - amount: 0.02
+          dimensions:
+            k2BillingTier: moodboards
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          | K2 Billing Tier | Price |
+
+          | --- | ---: |
+
+          | Text to image | $0.015 |
+
+          | Style references | $0.0175 |
+
+          | Moodboards | $0.02 |
+
+
+          <Accordion title="Deprecated request aliases">
+
+          These aliases are accepted for compatibility only and are not shown in the request schema.
+
+
+          | Deprecated | Use instead | Accepted until |
+
+          | --- | --- | --- |
+
+          | `presetStyles` | `styles` | 2026-06-19 |
+
+          | `imageStyleRefs` | `image_style_references` | 2026-06-19 |
+
+          </Accordion>'
+      x-krea-deprecated-field-aliases:
+      - from: presetStyles
+        to: styles
+        sunset_date: '2026-06-19'
+        reason: Public API request fields are moving to snake_case.
+        migration_url: https://docs.krea.ai/developers/deprecations#public-api-snake-case-fields
+      - from: imageStyleRefs
+        to: image_style_references
+        sunset_date: '2026-06-19'
+        reason: Public API request fields are moving to snake_case.
+        migration_url: https://docs.krea.ai/developers/deprecations#public-api-snake-case-fields
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      - name: X-Api-Zero-Data-Retention
+        in: header
+        required: false
+        schema:
+          type: string
+          enum:
+          - '1'
+        description: Enable Zero Data Retention for this request. Refer to the [documentation](/developers/zdr).
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: An Art Deco skyscraper in New York, jazzing with the skyline.
+              aspect_ratio: '1:1'
+              resolution: 1K
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type:
+                  - number
+                  - 'null'
+                styles:
+                  description: Styles (typically LoRAs) to use for the generation
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      strength:
+                        type: number
+                        minimum: -2
+                        maximum: 2
+                    required:
+                    - id
+                    - strength
+                image_style_references:
+                  description: Image style references. (0 = no style influence, 1 = maximum). Default 0.5.
+                  maxItems: 10
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      strength:
+                        default: 0.5
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                      url:
+                        type: string
+                        maxLength: 1024
+                        format: uri
+                        description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                    required:
+                    - url
+                aspect_ratio:
+                  type: string
+                  enum:
+                  - '1:1'
+                  - '4:3'
+                  - '3:2'
+                  - '16:9'
+                  - 2.35:1
+                  - '4:5'
+                  - '3:4'
+                  - '2:3'
+                  - '9:16'
+                  description: 'Aspect ratio. One of: 1:1, 4:3, 3:2, 16:9, 2.35:1, 4:5, 3:4, 2:3, 9:16.'
+                resolution:
+                  type: string
+                  enum:
+                  - 1K
+                  description: 'Resolution scale. One of: 1K.'
+                creativity:
+                  default: low
+                  description: Prompt expansion mode. `raw` disables prompt expansion; `low`, `medium`, and `high` control expansion strength. This does not affect the K2 Intensity, Complexity, or Movement slider LoRAs.
+                  type: string
+                  enum:
+                  - raw
+                  - low
+                  - medium
+                  - high
+                intensity:
+                  default: 0
+                  description: K2 Intensity slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                complexity:
+                  default: 0
+                  description: K2 Complexity slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                movement:
+                  default: 0
+                  description: K2 Movement slider value from -100 to 100. Use 0 for neutral/no slider LoRA.
+                  type: integer
+                  minimum: -100
+                  maximum: 100
+                moodboards:
+                  description: Moodboards to use for generation. Currently limited to one moodboard.
+                  maxItems: 1
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                        pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                      strength:
+                        default: 0.23
+                        type: number
+                        minimum: 0
+                        maximum: 1
+                    required:
+                    - id
+                image_url:
+                  description: Optional source image for image-to-image generation. When provided, generation starts from this image instead of pure noise. Control how much it changes with `strength`.
+                  anyOf:
+                  - type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                  - type: 'null'
+                strength:
+                  default: 0.99
+                  description: Denoising strength when `image_url` is provided. 0 keeps the input image, 1 fully replaces it (the input image is ignored). Has no effect without `image_url`. Default 0.99.
+                  type: number
+                  minimum: 0
+                  maximum: 1
+              required:
+              - prompt
+              - aspect_ratio
+              - resolution
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateImageKreaKrea2MediumTurbo
+      x-operation-id-source: derived
+  /generate/image/krea/krea-3:
+    post:
+      tags:
+      - Krea
+      description: Generate and edit images with Krea 3.
+      summary: Krea 3 Beta
+      x-mint:
+        content: '<Accordion title="Deprecated request aliases">
+
+          These aliases are accepted for compatibility only and are not shown in the request schema.
+
+
+          | Deprecated | Use instead | Accepted until |
+
+          | --- | --- | --- |
+
+          | `thinking_mode` | `thinking_mode` | 2026-10-23 |
+
+          </Accordion>'
+      x-krea-deprecated-field-aliases:
+      - from: thinking_mode
+        to: thinking_mode
+        sunset_date: '2026-10-23'
+        reason: thinking_mode values instant, medium and max are deprecated. Use fast or high.
+        migration_url: https://docs.krea.ai/developers/deprecations
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      - name: X-Api-Zero-Data-Retention
+        in: header
+        required: false
+        schema:
+          type: string
+          enum:
+          - '1'
+        description: Enable Zero Data Retention for this request. Refer to the [documentation](/developers/zdr).
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: Grand library with mage scholars, floating books, in the style of magical academy anime.
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                thinking_mode:
+                  type: string
+                  enum:
+                  - fast
+                  - high
+                image_urls:
+                  description: Reference image URLs to use for the generation
+                  maxItems: 8
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                resolution:
+                  type: string
+                  enum:
+                  - 1K
+                  - 2K
+                aspect_ratio:
+                  type: string
+                  enum:
+                  - '1:1'
+                  - '4:5'
+                  - '3:4'
+                  - '2:3'
+                  - '9:16'
+                  - '5:4'
+                  - '4:3'
+                  - '3:2'
+                  - '16:9'
+                  - '21:9'
+                seed:
+                  type: number
+                regional_edit:
+                  type: boolean
+              required:
+              - prompt
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateImageKreaKrea3
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

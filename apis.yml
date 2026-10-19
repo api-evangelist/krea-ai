@@ -384,6 +384,66 @@ apis:
     url: https://docs.krea.ai/api-reference/general/list-jobs
   - type: Documentation
     url: https://docs.krea.ai/api-reference/node-apps/execute-a-node-app
+- aid: krea-ai:krea-ai-audio-api
+  name: Krea Audio API
+  description: Speech and audio generation endpoints
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  tags:
+  - Audio
+  properties:
+  - type: OpenAPI
+    url: openapi/krea-ai-audio-api-openapi.yml
+- aid: krea-ai:krea-ai-krea-api
+  name: Krea Krea API
+  description: Krea-owned generation models including Krea 2
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  tags:
+  - Krea
+  properties:
+  - type: OpenAPI
+    url: openapi/krea-ai-krea-api-openapi.yml
+- aid: krea-ai:krea-ai-usage-api
+  name: Krea Usage API
+  description: Workspace usage reporting
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  tags:
+  - Usage
+  properties:
+  - type: OpenAPI
+    url: openapi/krea-ai-usage-api-openapi.yml
+- aid: krea-ai:krea-ai-utilities-api
+  name: Krea Utilities API
+  description: Miscellaneous utility endpoints
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  tags:
+  - Utilities
+  properties:
+  - type: OpenAPI
+    url: openapi/krea-ai-utilities-api-openapi.yml
+- aid: krea-ai:krea-ai-video-enhance-api
+  name: Krea Video Enhance API
+  description: Video enhance and upscale endpoints
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  tags:
+  - Video Enhance
+  properties:
+  - type: OpenAPI
+    url: openapi/krea-ai-video-enhance-api-openapi.yml
+- aid: krea-ai:krea-ai-3-d-api
+  name: Krea 3 D API
+  description: 3D model generation endpoints
+  humanURL: https://docs.krea.ai/api-reference/introduction
+  baseURL: https://api.krea.ai
+  tags:
+  - 3 D
+  properties:
+  - type: OpenAPI
+    url: openapi/krea-ai-3-d-api-openapi.yml
 name: Krea
 tags:
 - Artificial Intelligence

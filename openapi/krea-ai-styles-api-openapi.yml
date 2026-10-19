@@ -17,26 +17,13 @@ paths:
       tags:
       - Styles
       summary: Train a custom style (LoRA)
-      description: 'Train a custom style (LoRA) with simplified parameters. Uses intelligent defaults based on the training type (Default/Style/Object/Character).
+      description: Train a custom style (LoRA) with simplified parameters. Uses intelligent defaults based on the training type (Default/Style/Object/Character).
+      x-mint:
+        content: '<Note>
 
+          Trained styles are private and only usable by the API user that created them. To allow other workspace members to use the style, share it with the workspace using `POST /styles/{id}/share/workspace`.
 
-        **Note:** Trained styles are private and only usable by the API user that created them. To allow other workspace members to use the style, share it with the workspace using `POST /styles/{id}/share/workspace`.
-
-        | Model | Compute Units/Step |
-
-        |-------|-------------------|
-
-        | **qwen** | ~8.3 |
-
-        | **wan22** | ~5.3 |
-
-        | **flux_schnell** | ~3.4 |
-
-        | **wan** | ~3.4 |
-
-        | **flux_dev** | ~3.0 |
-
-        | **z-image** | ~2.4 |'
+          </Note>'
       parameters:
       - name: X-Webhook-URL
         in: header
@@ -44,7 +31,7 @@ paths:
         schema:
           type: string
           format: uri
-        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results.
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
       requestBody:
         content:
           application/json:
@@ -53,28 +40,30 @@ paths:
               - type: object
                 properties:
                   model:
+                    default: flux_dev
                     type: string
                     enum:
                     - flux_dev
                     - flux_schnell
                     - wan
                     - wan22
-                    default: flux_dev
                   type:
+                    default: Default
                     type: string
                     enum:
                     - Style
                     - Object
                     - Character
                     - Default
-                    default: Default
                   name:
                     type: string
                   urls:
                     type: array
                     items:
                       type: string
+                      maxLength: 1024
                       format: uri
+                      description: Can be an external URL, base64 data URI, or uploaded asset URL.
                   trigger_word:
                     type: string
                   learning_rate:
@@ -86,6 +75,7 @@ paths:
                   batch_size:
                     type: integer
                     minimum: 1
+                    maximum: 9007199254740991
                 required:
                 - name
                 - urls
@@ -96,20 +86,25 @@ paths:
                     enum:
                     - qwen
                     - z-image
+                    - k2
+                    - k2-large
+                    description: LoRA base model to train. `k2` is Krea 2 Medium and `k2-large` is Krea 2 Large.
                   type:
+                    default: Style
                     type: string
                     enum:
                     - Style
                     - Object
                     - Character
-                    default: Style
                   name:
                     type: string
                   urls:
                     type: array
                     items:
                       type: string
+                      maxLength: 1024
                       format: uri
+                      description: Can be an external URL, base64 data URI, or uploaded asset URL.
                   trigger_word:
                     type: string
                   max_train_steps:
@@ -120,6 +115,7 @@ paths:
                 - model
                 - name
                 - urls
+              type: object
       responses:
         '200':
           description: Training job created successfully. The job will be in a pending state until completed. Use /jobs/{id} to check progress.
@@ -131,6 +127,7 @@ paths:
                   job_id:
                     type: string
                     format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
                   status:
                     type: string
                     enum:
@@ -146,16 +143,34 @@ paths:
                   created_at:
                     type: string
                     format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
                   completed_at:
                     type: 'null'
                   result:
                     type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
                 required:
                 - job_id
                 - status
                 - created_at
                 - completed_at
                 - result
+                additionalProperties: false
         '400':
           description: Invalid request parameters
           content:
@@ -167,6 +182,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -178,6 +194,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '402':
           description: Insufficient credits
           content:
@@ -189,6 +206,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '429':
           description: Maximum number of concurrent jobs reached
           content:
@@ -200,6 +218,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: postStylesTrain
       x-operation-id-source: derived
   /styles:
@@ -226,8 +245,8 @@ paths:
       - in: query
         name: liked
         schema:
-          type: boolean
           default: false
+          type: boolean
       - in: query
         name: user
         schema:
@@ -239,6 +258,7 @@ paths:
       - in: query
         name: filter
         schema:
+          default: all
           type: string
           enum:
           - all
@@ -250,7 +270,6 @@ paths:
           - editor
           - gallery
           - public
-          default: all
       responses:
         '200':
           description: List of styles
@@ -268,58 +287,62 @@ paths:
                           type: string
                           description: Unique identifier for the style
                         title:
+                          description: Name of the style
                           type:
                           - string
                           - 'null'
-                          description: Name of the style
                         urls:
                           type: array
                           items:
                             type: string
+                            maxLength: 1024
                             format: uri
+                            description: Can be an external URL, base64 data URI, or uploaded asset URL.
                           description: Portrait-oriented preview URLs
                         public:
                           type: boolean
                           description: Whether the style is publicly visible
                         cover_url:
-                          type:
-                          - string
-                          - 'null'
-                          format: uri
                           description: Cover image URL
+                          anyOf:
+                          - type: string
+                            format: uri
+                          - type: 'null'
                         prompt:
                           type: string
                           description: Suggested prompt for using this style
                         models:
+                          description: Compatible model names (e.g., flux_dev, wan)
                           type: array
                           items:
                             type: string
-                          description: Compatible model names (e.g., flux_dev, wan)
                         owner:
-                          type:
-                          - object
-                          - 'null'
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            name:
-                              type: string
-                            avatar_url:
-                              type:
-                              - string
-                              - 'null'
-                              format: uri
-                          required:
-                          - id
-                          - name
+                          anyOf:
+                          - type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                              name:
+                                type: string
+                              avatar_url:
+                                anyOf:
+                                - type: string
+                                  format: uri
+                                - type: 'null'
+                            required:
+                            - id
+                            - name
+                            additionalProperties: false
+                          - type: 'null'
                           description: Style creator info (null for Krea-official styles)
                         like_count:
                           type: number
                           description: Number of likes
                         created_at:
-                          type: string
                           description: Creation timestamp
+                          type: string
                       required:
                       - id
                       - title
@@ -329,6 +352,7 @@ paths:
                       - owner
                       - like_count
                       - created_at
+                      additionalProperties: false
                       description: Style response schema
                   next_cursor:
                     type:
@@ -337,6 +361,7 @@ paths:
                 required:
                 - items
                 - next_cursor
+                additionalProperties: false
         '400':
           description: Invalid query parameters
           content:
@@ -348,6 +373,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -359,6 +385,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: getStyles
       x-operation-id-source: derived
   /styles/{id}:
@@ -370,12 +397,12 @@ paths:
       parameters:
       - in: path
         name: id
-        description: A unique identifier for a style
         schema:
           type: string
           description: A unique identifier for a style
-          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+          example: 42c63a2a-2dcb-4a60-9a2d-f35f2df40a6f
         required: true
+        description: A unique identifier for a style
       responses:
         '200':
           description: Style details
@@ -388,58 +415,62 @@ paths:
                     type: string
                     description: Unique identifier for the style
                   title:
+                    description: Name of the style
                     type:
                     - string
                     - 'null'
-                    description: Name of the style
                   urls:
                     type: array
                     items:
                       type: string
+                      maxLength: 1024
                       format: uri
+                      description: Can be an external URL, base64 data URI, or uploaded asset URL.
                     description: Portrait-oriented preview URLs
                   public:
                     type: boolean
                     description: Whether the style is publicly visible
                   cover_url:
-                    type:
-                    - string
-                    - 'null'
-                    format: uri
                     description: Cover image URL
+                    anyOf:
+                    - type: string
+                      format: uri
+                    - type: 'null'
                   prompt:
                     type: string
                     description: Suggested prompt for using this style
                   models:
+                    description: Compatible model names (e.g., flux_dev, wan)
                     type: array
                     items:
                       type: string
-                    description: Compatible model names (e.g., flux_dev, wan)
                   owner:
-                    type:
-                    - object
-                    - 'null'
-                    properties:
-                      id:
-                        type: string
-                        format: uuid
-                      name:
-                        type: string
-                      avatar_url:
-                        type:
-                        - string
-                        - 'null'
-                        format: uri
-                    required:
-                    - id
-                    - name
+                    anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        name:
+                          type: string
+                        avatar_url:
+                          anyOf:
+                          - type: string
+                            format: uri
+                          - type: 'null'
+                      required:
+                      - id
+                      - name
+                      additionalProperties: false
+                    - type: 'null'
                     description: Style creator info (null for Krea-official styles)
                   like_count:
                     type: number
                     description: Number of likes
                   created_at:
-                    type: string
                     description: Creation timestamp
+                    type: string
                 required:
                 - id
                 - title
@@ -449,6 +480,7 @@ paths:
                 - owner
                 - like_count
                 - created_at
+                additionalProperties: false
                 description: Style response schema
         '401':
           description: Unauthorized
@@ -461,6 +493,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Style not found
           content:
@@ -472,6 +505,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: getStylesById
       x-operation-id-source: derived
     patch:
@@ -482,12 +516,12 @@ paths:
       parameters:
       - in: path
         name: id
-        description: A unique identifier for a style
         schema:
           type: string
           description: A unique identifier for a style
-          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+          example: 42c63a2a-2dcb-4a60-9a2d-f35f2df40a6f
         required: true
+        description: A unique identifier for a style
       requestBody:
         content:
           application/json:
@@ -495,14 +529,14 @@ paths:
               type: object
               properties:
                 public:
-                  type:
-                  - boolean
-                  - 'null'
+                  type: boolean
                 urls:
                   type: array
                   items:
                     type: string
+                    maxLength: 1024
                     format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
                 title:
                   type: string
                 cover_url:
@@ -519,58 +553,62 @@ paths:
                     type: string
                     description: Unique identifier for the style
                   title:
+                    description: Name of the style
                     type:
                     - string
                     - 'null'
-                    description: Name of the style
                   urls:
                     type: array
                     items:
                       type: string
+                      maxLength: 1024
                       format: uri
+                      description: Can be an external URL, base64 data URI, or uploaded asset URL.
                     description: Portrait-oriented preview URLs
                   public:
                     type: boolean
                     description: Whether the style is publicly visible
                   cover_url:
-                    type:
-                    - string
-                    - 'null'
-                    format: uri
                     description: Cover image URL
+                    anyOf:
+                    - type: string
+                      format: uri
+                    - type: 'null'
                   prompt:
                     type: string
                     description: Suggested prompt for using this style
                   models:
+                    description: Compatible model names (e.g., flux_dev, wan)
                     type: array
                     items:
                       type: string
-                    description: Compatible model names (e.g., flux_dev, wan)
                   owner:
-                    type:
-                    - object
-                    - 'null'
-                    properties:
-                      id:
-                        type: string
-                        format: uuid
-                      name:
-                        type: string
-                      avatar_url:
-                        type:
-                        - string
-                        - 'null'
-                        format: uri
-                    required:
-                    - id
-                    - name
+                    anyOf:
+                    - type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                        name:
+                          type: string
+                        avatar_url:
+                          anyOf:
+                          - type: string
+                            format: uri
+                          - type: 'null'
+                      required:
+                      - id
+                      - name
+                      additionalProperties: false
+                    - type: 'null'
                     description: Style creator info (null for Krea-official styles)
                   like_count:
                     type: number
                     description: Number of likes
                   created_at:
-                    type: string
                     description: Creation timestamp
+                    type: string
                 required:
                 - id
                 - title
@@ -580,6 +618,7 @@ paths:
                 - owner
                 - like_count
                 - created_at
+                additionalProperties: false
                 description: Style response schema
         '400':
           description: No valid fields to update
@@ -592,6 +631,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -603,6 +643,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Style not found or you are not the owner
           content:
@@ -614,6 +655,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: patchStylesById
       x-operation-id-source: derived
   /styles/{id}/share/link:
@@ -625,12 +667,12 @@ paths:
       parameters:
       - in: path
         name: id
-        description: A unique identifier for a style
         schema:
           type: string
           description: A unique identifier for a style
-          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+          example: 42c63a2a-2dcb-4a60-9a2d-f35f2df40a6f
         required: true
+        description: A unique identifier for a style
       responses:
         '200':
           description: Shareable link retrieved (existing link)
@@ -649,6 +691,7 @@ paths:
                 required:
                 - share_link
                 - is_new
+                additionalProperties: false
                 description: Response containing a shareable link for a style
         '201':
           description: Shareable link created (new link)
@@ -667,6 +710,7 @@ paths:
                 required:
                 - share_link
                 - is_new
+                additionalProperties: false
                 description: Response containing a shareable link for a style
         '401':
           description: Unauthorized
@@ -679,6 +723,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Style not found or you are not the owner
           content:
@@ -690,6 +735,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: getStylesByIdShareLink
       x-operation-id-source: derived
   /styles/{id}/share/workspace:
@@ -701,12 +747,12 @@ paths:
       parameters:
       - in: path
         name: id
-        description: A unique identifier for a style
         schema:
           type: string
           description: A unique identifier for a style
-          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+          example: 42c63a2a-2dcb-4a60-9a2d-f35f2df40a6f
         required: true
+        description: A unique identifier for a style
       responses:
         '200':
           description: Style shared with workspace successfully
@@ -728,22 +774,20 @@ paths:
                         type: string
                         description: Workspace ID
                       name:
+                        description: Workspace name
                         type:
                         - string
                         - 'null'
-                        description: Workspace name
-                      is_default:
-                        type: boolean
-                        description: Whether this is the default workspace
                     required:
                     - id
                     - name
-                    - is_default
+                    additionalProperties: false
                     description: The workspace the style was shared with
                 required:
                 - success
                 - style_id
                 - workspace
+                additionalProperties: false
                 description: Response after sharing a style within a workspace
         '401':
           description: Unauthorized
@@ -756,6 +800,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '403':
           description: You do not own this style or are not a member of the workspace
           content:
@@ -767,6 +812,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Style not found
           content:
@@ -778,6 +824,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: postStylesByIdShareWorkspace
       x-operation-id-source: derived
     delete:
@@ -788,12 +835,12 @@ paths:
       parameters:
       - in: path
         name: id
-        description: A unique identifier for a style
         schema:
           type: string
           description: A unique identifier for a style
-          example: a816d79d-55c9-43ee-81c3-8330ffe79e6c
+          example: 42c63a2a-2dcb-4a60-9a2d-f35f2df40a6f
         required: true
+        description: A unique identifier for a style
       responses:
         '200':
           description: Style removed from workspace successfully
@@ -806,6 +853,7 @@ paths:
                     type: boolean
                 required:
                 - success
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -817,6 +865,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '403':
           description: You do not own this style
           content:
@@ -828,6 +877,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Style not found or not shared with this workspace
           content:
@@ -839,6 +889,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: deleteStylesByIdShareWorkspace
       x-operation-id-source: derived
 components:

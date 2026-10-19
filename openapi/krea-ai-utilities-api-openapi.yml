@@ -1,0 +1,139 @@
+openapi: 3.2.0
+info:
+  title: Krea Utilities API
+  version: v1
+  description: Miscellaneous utility endpoints
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Utilities
+  description: Miscellaneous utility endpoints
+paths:
+  /export/3d:
+    post:
+      tags:
+      - Utilities
+      summary: Export a 3D model
+      description: Export a completed 3D generation job's model to OBJ, FBX, STL, or PLY. Pass the job id and target format. The exported model is returned as a ZIP file.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                job_id:
+                  type: string
+                  description: A unique identifier for a job
+                  example: 0388dc61-4291-49d4-8376-d49cc2ae49c9
+                file_format:
+                  type: string
+                  enum:
+                  - obj
+                  - fbx
+                  - stl
+                  - ply
+                  description: Target format for the export. The model is returned as a ZIP file.
+                node_app_key:
+                  description: When the job is a node app, the output key of the 3D model to export (the key under `result.urls`).
+                  type: string
+              required:
+              - job_id
+              - file_format
+      responses:
+        '200':
+          description: Exported 3D model URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    description: URL of the exported 3D model, returned as a ZIP file.
+                required:
+                - url
+                additionalProperties: false
+        '400':
+          description: The job is not a 3D generation, or has no model to export.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: The job or its output asset was not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '409':
+          description: The job has not completed yet.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '422':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '502':
+          description: Model conversion failed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postExport3d
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

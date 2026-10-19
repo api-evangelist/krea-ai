@@ -1,0 +1,1655 @@
+openapi: 3.2.0
+info:
+  title: Krea 3 D API
+  version: v1
+  description: 3D model generation endpoints
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: 3 D
+  description: 3D model generation endpoints
+paths:
+  /generate/3d/tencent/hunyuan3d-3.1-pro:
+    post:
+      tags:
+      - 3 D
+      description: High‑fidelity text or image‑to‑3D with optional PBR materials, multi‑view inputs, and adjustable face count for cleaner meshes.
+      summary: Hunyuan3D 3.1 Pro
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                enable_pbr:
+                  type: boolean
+                face_count:
+                  type: number
+                  minimum: 40000
+                  maximum: 1500000
+                back_image_url:
+                  description: Optional back-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                left_image_url:
+                  description: Optional left-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                right_image_url:
+                  description: Optional right-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                top_image_url:
+                  description: Optional top-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                bottom_image_url:
+                  description: Optional bottom-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                left_front_image_url:
+                  description: Optional left-front-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                right_front_image_url:
+                  description: Optional right-front-view image URL.
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dTencentHunyuan3d31Pro
+      x-operation-id-source: derived
+  /generate/3d/microsoft/trellis-2:
+    post:
+      tags:
+      - 3 D
+      description: Native 3D generative model for high-quality 3D asset creation
+      summary: TRELLIS 2
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                resolution:
+                  type: string
+                  enum:
+                  - '512'
+                  - '1024'
+                  - '1536'
+                texture_size:
+                  type: string
+                  enum:
+                  - '1024'
+                  - '2048'
+                  - '4096'
+                decimation_target:
+                  type: number
+                  minimum: 100000
+                  maximum: 2000000
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dMicrosoftTrellis2
+      x-operation-id-source: derived
+  /generate/3d/tencent/hunyuan3d-2.1:
+    post:
+      tags:
+      - 3 D
+      description: High quality 3D model generator
+      summary: Hunyuan3D-2.1
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  default: 1337
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dTencentHunyuan3d21
+      x-operation-id-source: derived
+  /generate/3d/tripo/tripo:
+    post:
+      tags:
+      - 3 D
+      description: High quality 3D model generator
+      summary: Tripo
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.3
+          dimensions: {}
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          **Price:** $0.30 per request'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dTripoTripo
+      x-operation-id-source: derived
+  /generate/3d/tripo/h3.1:
+    post:
+      tags:
+      - 3 D
+      description: 'Tripo''s flagship generator: sharp geometry from text or image at low cost.'
+      summary: Tripo H3.1
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                face_limit:
+                  type: number
+                  minimum: 1000
+                  maximum: 2000000
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dTripoH31
+      x-operation-id-source: derived
+  /generate/3d/hyper3d/rodin-2.5:
+    post:
+      tags:
+      - 3 D
+      description: Detailed, well-structured meshes with PBR materials from text or image.
+      summary: Rodin V2.5
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.4
+          dimensions: {}
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          **Price:** $0.40 per request'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  maxItems: 5
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dHyper3dRodin25
+      x-operation-id-source: derived
+  /generate/3d/hyper3d/rodin-2.5-fast:
+    post:
+      tags:
+      - 3 D
+      description: Rodin V2.5 tuned for speed and cost, for quick iteration on shapes.
+      summary: Rodin V2.5 Fast
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.1
+          dimensions: {}
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          **Price:** $0.10 per request'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  maxItems: 5
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dHyper3dRodin25Fast
+      x-operation-id-source: derived
+  /generate/3d/tencent/hunyuan3d-3.1-rapid:
+    post:
+      tags:
+      - 3 D
+      description: Fast, inexpensive tier of Hunyuan3D 3.1 for text or image-to-3D.
+      summary: Hunyuan3D 3.1 Rapid
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.225
+          dimensions: {}
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          **Price:** $0.225 per request'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dTencentHunyuan3d31Rapid
+      x-operation-id-source: derived
+  /generate/3d/meshy/meshy-7:
+    post:
+      tags:
+      - 3 D
+      description: Production-ready meshes from text or image, with clean topology and PBR-quality textures.
+      summary: Meshy V7
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                target_polycount:
+                  type: number
+                  minimum: 100
+                  maximum: 300000
+                enable_pbr:
+                  type: boolean
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dMeshyMeshy7
+      x-operation-id-source: derived
+  /generate/3d/microsoft/trellis:
+    post:
+      tags:
+      - 3 D
+      description: High quality 3D model generator
+      summary: TRELLIS
+      x-krea-pricing:
+        type: fixed
+        currency: USD
+        unit: request
+        price_points:
+        - amount: 0.02
+          dimensions: {}
+      x-mint:
+        content: '## Pricing
+
+
+          <Note>Fixed API prices in USD.</Note>
+
+
+          **Price:** $0.02 per request'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                seed:
+                  type: number
+                input_mode:
+                  default: image
+                  type: string
+                  enum:
+                  - image
+                  - text
+                generate_texture:
+                  default: true
+                  type: boolean
+                texture_size:
+                  type: number
+                image_urls:
+                  default: []
+                  description: Input image URLs for image-to-3D generation. Omit or pass an empty array for text-to-3D.
+                  type: array
+                  items:
+                    type: string
+                    maxLength: 1024
+                    format: uri
+                    description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerate3dMicrosoftTrellis
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

@@ -25,12 +25,12 @@ paths:
               type: object
               properties:
                 file:
-                  type: string
                   description: 'The file to upload (JPEG, PNG, WebP, HEIC, MP4, MOV, WebM, GLB, WAV, MP3). Maximum size: 75MB.'
+                  type: string
                   format: binary
                 description:
-                  type: string
                   description: Optional description for the asset
+                  type: string
               required:
               - file
       responses:
@@ -44,12 +44,14 @@ paths:
                   id:
                     type: string
                     format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
                   image_url:
                     type: string
                     format: uri
                   uploaded_at:
                     type: string
                     format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
                   width:
                     type:
                     - number
@@ -68,7 +70,6 @@ paths:
                     - 'null'
                   description:
                     type: string
-                  metadata: {}
                 required:
                 - id
                 - image_url
@@ -77,6 +78,7 @@ paths:
                 - height
                 - size_bytes
                 - mime_type
+                additionalProperties: false
         '400':
           description: Invalid file type or size
           content:
@@ -88,6 +90,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -99,6 +102,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: postAssets
       x-operation-id-source: derived
     get:
@@ -109,19 +113,20 @@ paths:
       parameters:
       - in: query
         name: limit
-        description: 'Number of items to return (1-1000, default: 100)'
         schema:
+          description: 'Number of items to return (1-1000, default: 100)'
           type: integer
           minimum: 1
           maximum: 1000
-          description: 'Number of items to return (1-1000, default: 100)'
+        description: 'Number of items to return (1-1000, default: 100)'
       - in: query
         name: cursor
-        description: Cursor for pagination
         schema:
+          description: Cursor for pagination
           type: string
           format: date-time
-          description: Cursor for pagination
+          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+        description: Cursor for pagination
       responses:
         '200':
           description: List of assets
@@ -138,12 +143,14 @@ paths:
                         id:
                           type: string
                           format: uuid
+                          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
                         image_url:
                           type: string
                           format: uri
                         uploaded_at:
                           type: string
                           format: date-time
+                          pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
                         width:
                           type:
                           - number
@@ -162,7 +169,6 @@ paths:
                           - 'null'
                         description:
                           type: string
-                        metadata: {}
                       required:
                       - id
                       - image_url
@@ -171,6 +177,7 @@ paths:
                       - height
                       - size_bytes
                       - mime_type
+                      additionalProperties: false
                   next_cursor:
                     type:
                     - string
@@ -178,6 +185,7 @@ paths:
                 required:
                 - items
                 - next_cursor
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -189,6 +197,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: getAssets
       x-operation-id-source: derived
   /assets/{id}:
@@ -200,12 +209,13 @@ paths:
       parameters:
       - in: path
         name: id
-        description: Asset ID
         schema:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
           description: Asset ID
         required: true
+        description: Asset ID
       responses:
         '200':
           description: Asset details
@@ -217,12 +227,14 @@ paths:
                   id:
                     type: string
                     format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
                   image_url:
                     type: string
                     format: uri
                   uploaded_at:
                     type: string
                     format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
                   width:
                     type:
                     - number
@@ -241,7 +253,6 @@ paths:
                     - 'null'
                   description:
                     type: string
-                  metadata: {}
                 required:
                 - id
                 - image_url
@@ -250,6 +261,7 @@ paths:
                 - height
                 - size_bytes
                 - mime_type
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -261,6 +273,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Asset not found
           content:
@@ -272,6 +285,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: getAssetsById
       x-operation-id-source: derived
     delete:
@@ -282,12 +296,13 @@ paths:
       parameters:
       - in: path
         name: id
-        description: Asset ID
         schema:
           type: string
           format: uuid
+          pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
           description: Asset ID
         required: true
+        description: Asset ID
       responses:
         '200':
           description: Asset deleted successfully
@@ -303,6 +318,7 @@ paths:
                 required:
                 - success
                 - message
+                additionalProperties: false
         '401':
           description: Unauthorized
           content:
@@ -314,6 +330,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
         '404':
           description: Asset not found
           content:
@@ -325,6 +342,7 @@ paths:
                     type: string
                 required:
                 - error
+                additionalProperties: false
       operationId: deleteAssetsById
       x-operation-id-source: derived
 components:

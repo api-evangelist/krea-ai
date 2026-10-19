@@ -1,0 +1,183 @@
+openapi: 3.2.0
+info:
+  title: Krea Usage API
+  version: v1
+  description: Workspace usage reporting
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Usage
+  description: Workspace usage reporting
+paths:
+  /usage:
+    get:
+      tags:
+      - Usage
+      summary: List workspace usage
+      description: 'The workspace''s completed metered jobs in a window, newest first, each with the compute units it used. It aggregates nothing: group and sum `compute_units` in your own pipeline.
+
+
+        Needs a workspace service API key, which the dashboard mints against a single workspace. That key names the workspace, so no parameter can widen the scope. Personal API keys and browser sessions are refused. The plan must carry the usage API entitlement, which only enterprise plans do. Inside an organization each key still returns only its own workspace: an organization-wide view is the union of one pull per workspace, so summing one workspace does not reconcile with the organization invoice.
+
+
+        `compute_units` is the amount charged against the compute meter after any promo discount, the same quantity the in-app usage page shows. Queued, running and failed jobs never appear. Direct-API jobs are not included: they bill in dollars against the API credit balance, so they carry no compute units. Unmetered open-source license jobs are also left out. A completed job with no billing record does not appear at all — it is absent, not zero.
+
+
+        The window is held inside the reporting coverage the backend has: `start_date` is clamped up to the earliest covered date and `end_date` down to now. Always read the window back off `start_date`/`end_date` in the response rather than assuming the one you asked for. A window holding more than 30,000 jobs is refused with a 400 — ask for a shorter window and concatenate the results.
+
+
+        The tail of a window is not final. Jobs reach the usage store by ingestion shortly after they complete, so a window ending at or near the request time can be missing its last minutes. An incremental pipeline should start each pull a few minutes before the previous `end_date` and de-duplicate on `job_id`, rather than resuming exactly where the last response ended.'
+      parameters:
+      - in: query
+        name: start_date
+        schema:
+          description: Start of the window, inclusive. A UTC calendar date (2026-08-01, read as that day's midnight) or an ISO 8601 date-time. Defaults to 7 days before end_date.
+          type: string
+          minLength: 1
+        description: Start of the window, inclusive. A UTC calendar date (2026-08-01, read as that day's midnight) or an ISO 8601 date-time. Defaults to 7 days before end_date.
+      - in: query
+        name: end_date
+        schema:
+          description: End of the window, inclusive. A calendar date covers the whole of that day, so start_date=2026-08-01&end_date=2026-08-01 returns that day's jobs. Defaults to the time of the request.
+          type: string
+          minLength: 1
+        description: End of the window, inclusive. A calendar date covers the whole of that day, so start_date=2026-08-01&end_date=2026-08-01 returns that day's jobs. Defaults to the time of the request.
+      responses:
+        '200':
+          description: The jobs in the window, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  start_date:
+                    type: string
+                    description: 'Effective window start, ISO 8601 UTC: the requested start, clamped up to coverage.'
+                  end_date:
+                    type: string
+                    description: 'Effective window end, ISO 8601 UTC: the requested end, clamped down to now. The tail of the window is not final — jobs are ingested shortly after completion — so an incremental pipeline should start its next pull a few minutes before this value and de-duplicate on job_id.'
+                  jobs:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        job_id:
+                          type: string
+                        user_id:
+                          description: Krea user id of the member who ran the job.
+                          type:
+                          - string
+                          - 'null'
+                        user_email:
+                          description: 'Email of that member. Read as a warehouse dimension: for jobs predating live ingestion it is the address held at backfill time, not the one held when the job ran, so a member who changed address reads under the newer one.'
+                          type:
+                          - string
+                          - 'null'
+                        type:
+                          description: Job type, for example `externalImage`.
+                          type:
+                          - string
+                          - 'null'
+                        completed_at:
+                          type: string
+                          description: Completion time, ISO 8601 UTC.
+                        compute_units:
+                          type: number
+                          description: Compute units the job used, after any promo discount. The same quantity the in-app usage page shows.
+                      required:
+                      - job_id
+                      - user_id
+                      - user_email
+                      - type
+                      - completed_at
+                      - compute_units
+                      additionalProperties: false
+                    description: Completed metered jobs in the window, newest first. Queued, running and failed jobs never appear.
+                required:
+                - start_date
+                - end_date
+                - jobs
+                additionalProperties: false
+        '400':
+          description: The window holds more jobs than one response carries, or falls outside the coverage window
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '403':
+          description: The credential is not a workspace API key, or the plan lacks the usage API entitlement
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '422':
+          description: Query validation failed; the details name the parameter
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '503':
+          description: Usage reporting is temporarily unavailable in this environment; retry the same request later
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: getUsage
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

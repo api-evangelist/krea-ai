@@ -1,0 +1,732 @@
+openapi: 3.2.0
+info:
+  title: Krea Audio API
+  version: v1
+  description: Speech and audio generation endpoints
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Audio
+  description: Speech and audio generation endpoints
+paths:
+  /generate/audio/bytedance/seed-audio-1.0:
+    post:
+      tags:
+      - Audio
+      description: Generate speech, dialogue, and sound design from a text prompt with Seed Audio 1.0.
+      summary: Seed Audio 1.0
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: A floating village, with houses on stilts and boats zigzagging between.
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 2048
+                  description: 'Text prompt describing the speech, dialogue, or sound to generate, e.g. "A calm female narrator says: ...".'
+              required:
+              - prompt
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateAudioBytedanceSeedAudio10
+      x-operation-id-source: derived
+  /generate/audio/elevenlabs/tts:
+    post:
+      tags:
+      - Audio
+      description: 'Convert text to natural-sounding speech with ElevenLabs voices. Defaults to eleven_multilingual_v2; pass model_id: eleven_v4 for ElevenLabs'' most expressive model (best voice cloning, 90+ languages) or eleven_v4_turbo for low-latency delivery.'
+      summary: ElevenLabs TTS
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: Immense tree city, houses in branches, residents swinging on vines, reminiscent of nature-centric anime.
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 2000
+                  description: The text to convert to speech.
+                voice_id:
+                  default: hpp4J3VqNfWAUOO0d1Us
+                  description: 'ElevenLabs voice ID. Available voices: Bella (hpp4J3VqNfWAUOO0d1Us), Roger (CwhRBWXzGAHq8TQ4Fs17), Sarah (EXAVITQu4vr4xnSDxMaL), Laura (FGY2WhTYpPnrIDTdsKH5), Charlie (IKne3meq5aSn9XLyUdCD), George (JBFqnCBsd6RMkjVDRZzb), Callum (N2lVS1w4EtoT3dr4eOWO), River (SAz9YHcvj6GT2YYXdXww), Harry (SOYHLrjzK2X1ezoPC6cr), Liam (TX3LPaxmHKxFdv7VOQHJ), Alice (Xb7hH8MSUJpSbSDYk0k2), Matilda (XrExE9yKIg1WjnnlVkGX), Will (bIHbv24MWmeRgasZH58o), Jessica (cgSgspJ2msm6clMCkdW9), Eric (cjVigY5qzO86Huf0OWal), Chris (iP95p4xoKVk53GoZ742B), Brian (nPczCjzI2devNBz1zQrb), Daniel (onwK4e9ZLuTAKqWW03F9), Lily (pFZP5JQG7iQjIQuC4Bku), Adam (pNInz6obpgDQGcFmaJgB), Bill (pqHfZKP75CvOlQylNhV4).'
+                  type: string
+                  minLength: 1
+                model_id:
+                  default: eleven_multilingual_v2
+                  description: ElevenLabs model ID. Defaults to eleven_multilingual_v2. Use eleven_v4 for ElevenLabs' most expressive, highest-quality model (best voice cloning, 90+ languages), or eleven_v4_turbo for low-latency generation.
+                  type: string
+                  minLength: 1
+              required:
+              - prompt
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateAudioElevenlabsTts
+      x-operation-id-source: derived
+  /generate/audio/elevenlabs/music:
+    post:
+      tags:
+      - Audio
+      description: Generate a song or instrumental track from a text prompt with ElevenLabs Music. Vocals are included by default; set force_instrumental for instrumental-only output.
+      summary: ElevenLabs Music
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: Night market under a starry sky, spirits peddling wares, echoing spirited-away vibes.
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 4100
+                  description: Text prompt describing the music to generate, e.g. genre, mood, instruments, and lyrics style.
+                music_length_ms:
+                  description: Length of the track in milliseconds (3s to 600s). Omit to let the model choose.
+                  type: integer
+                  minimum: 3000
+                  maximum: 600000
+                force_instrumental:
+                  default: false
+                  description: When true, generate instrumental music without vocals.
+                  type: boolean
+              required:
+              - prompt
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateAudioElevenlabsMusic
+      x-operation-id-source: derived
+  /generate/audio/elevenlabs/music-v2:
+    post:
+      tags:
+      - Audio
+      description: Generate a song or instrumental track from a text prompt with ElevenLabs Music v2 — better prompt adherence, composition, and vocal delivery than v1, plus multilingual output. Vocals are included by default; set force_instrumental for instrumental-only output.
+      summary: ElevenLabs Music v2
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: An old lighthouse on a rugged coastline, waves crashing at its base.
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 4100
+                  description: Text prompt describing the music to generate, e.g. genre, mood, instruments, and lyrics style.
+                music_length_ms:
+                  description: Length of the track in milliseconds (3s to 600s). Omit to let the model choose.
+                  type: integer
+                  minimum: 3000
+                  maximum: 600000
+                force_instrumental:
+                  default: false
+                  description: When true, generate instrumental music without vocals.
+                  type: boolean
+              required:
+              - prompt
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateAudioElevenlabsMusicV2
+      x-operation-id-source: derived
+  /generate/audio/elevenlabs/music-v2.5:
+    post:
+      tags:
+      - Audio
+      description: Generate a song or instrumental track from a text prompt with ElevenLabs Music v2.5, the latest ElevenLabs music model. Vocals are included by default; set force_instrumental for instrumental-only output.
+      summary: ElevenLabs Music v2.5
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example:
+              prompt: Majestic fjords with small fishing villages nestled at their bases.
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  minLength: 1
+                  maxLength: 4100
+                  description: Text prompt describing the music to generate, e.g. genre, mood, instruments, and lyrics style.
+                music_length_ms:
+                  description: Length of the track in milliseconds (3s to 600s). Omit to let the model choose.
+                  type: integer
+                  minimum: 3000
+                  maximum: 600000
+                force_instrumental:
+                  default: false
+                  description: When true, generate instrumental music without vocals.
+                  type: boolean
+              required:
+              - prompt
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateAudioElevenlabsMusicV25
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http

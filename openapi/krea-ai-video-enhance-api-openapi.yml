@@ -1,0 +1,2359 @@
+openapi: 3.2.0
+info:
+  title: Krea Video Enhance API
+  version: v1
+  description: Video enhance and upscale endpoints
+servers:
+- url: https://api.krea.ai
+  description: Krea API
+security:
+- bearerAuth: []
+tags:
+- name: Video Enhance
+  description: Video enhance and upscale endpoints
+paths:
+  /generate/enhance/topaz/video-upscale:
+    post:
+      tags:
+      - Video Enhance
+      description: Topaz's powerful AI upscaler. Add frames and grain, fix focus, and more. Max 8K.
+      summary: Topaz Video Upscale
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source video width.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source video height.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                enhancement:
+                  default: true
+                  description: Run the Topaz enhancement (upscaling / cleanup) pass.
+                  type: boolean
+                enhancement_video_type:
+                  default: Progressive
+                  description: Whether the source is progressive, interlaced, or mixed.
+                  x-krea-enum-labels:
+                  - Progressive
+                  - Interlaced
+                  - Progressive + Interlaced
+                  type: string
+                  enum:
+                  - Progressive
+                  - Interlaced
+                  - ProgressiveInterlaced
+                enhancement_model:
+                  default: prob-4
+                  description: Enhancement AI model. Valid options depend on the video type (Progressive — Artemis, Gaia, Iris, Nyx, Proteus, Rhea, Theia; Interlaced — Dione DV, Dione TV, Dione Dehalo, Iris LQ, Iris MQ, Proteus; Progressive + Interlaced — Dione Robust, Dione Robust Dehalo, Iris LQ, Iris MQ, Proteus).
+                  x-krea-enum-labels:
+                  - Artemis Aliased & Moire v9
+                  - Artemis High Quality v12
+                  - Artemis Low Quality v13
+                  - Artemis Strong Dehalo v2
+                  - Artemis Medium Quality v13
+                  - Artemis Dehalo v2
+                  - Dione Interlaced DV v3
+                  - Dione Interlaced Robust v4
+                  - Dione Interlaced Robust Dehalo v2
+                  - Dione Interlaced TV v4
+                  - Dione Interlaced Dehalo v2
+                  - Gaia Computer Graphics v5
+                  - Gaia High Quality v5
+                  - Iris Low Quality
+                  - Iris Medium Quality
+                  - Nexus Film v1
+                  - Nyx v3
+                  - Proteus v4
+                  - Rhea v1
+                  - Selene v1
+                  - Theia Detail v3
+                  - Theia Film v4
+                  - Theia Medium v2
+                  x-krea-dependent-enum:
+                    field: enhancement_video_type
+                    optionsByValue:
+                      Progressive:
+                      - value: ahq-12
+                        label: Artemis
+                      - value: ghq-5
+                        label: Gaia
+                      - value: iris-3
+                        label: Iris
+                      - value: nyx-3
+                        label: Nyx
+                      - value: prob-4
+                        label: Proteus
+                      - value: rhea-1
+                        label: Rhea
+                      - value: thd-3
+                        label: Theia
+                      Interlaced:
+                      - value: ddv-3
+                        label: Dione DV
+                      - value: dtv-4
+                        label: Dione TV
+                      - value: dtvs-2
+                        label: Dione Dehalo
+                      - value: iris-2
+                        label: Iris LQ
+                      - value: iris-3
+                        label: Iris MQ
+                      - value: prob-4
+                        label: Proteus
+                      ProgressiveInterlaced:
+                      - value: dtd-4
+                        label: Dione Robust
+                      - value: dtds-2
+                        label: Dione Robust Dehalo
+                      - value: iris-2
+                        label: Iris LQ
+                      - value: iris-3
+                        label: Iris MQ
+                      - value: prob-4
+                        label: Proteus
+                  type: string
+                  enum:
+                  - aaa-9
+                  - ahq-12
+                  - alq-13
+                  - alqs-2
+                  - amq-13
+                  - amqs-2
+                  - ddv-3
+                  - dtd-4
+                  - dtds-2
+                  - dtv-4
+                  - dtvs-2
+                  - gcg-5
+                  - ghq-5
+                  - iris-2
+                  - iris-3
+                  - nxf-1
+                  - nyx-3
+                  - prob-4
+                  - rhea-1
+                  - sl-1
+                  - thd-3
+                  - thf-4
+                  - thm-2
+                enhancement_focus_fix:
+                  default: None
+                  description: Focus correction strength applied to blurry footage.
+                  type: string
+                  enum:
+                  - None
+                  - Normal
+                  - Strong
+                enhancement_parameters:
+                  default: Auto
+                  description: '`Auto` lets the AI pick settings; `Manual` uses the sliders below.'
+                  type: string
+                  enum:
+                  - Auto
+                  - Manual
+                enhancement_compression:
+                  default: 0.1
+                  description: Revert compression artifacts (Manual only).
+                  x-krea-visible-when:
+                  - field: enhancement_parameters
+                    equals: Manual
+                  type: number
+                  minimum: -1
+                  maximum: 1
+                enhancement_recover_details:
+                  default: 0.7
+                  description: Recover original detail (Manual only).
+                  x-krea-visible-when:
+                  - field: enhancement_parameters
+                    equals: Manual
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                enhancement_sharpen:
+                  default: 0.2
+                  description: Sharpen amount (Manual only).
+                  x-krea-visible-when:
+                  - field: enhancement_parameters
+                    equals: Manual
+                  type: number
+                  minimum: -1
+                  maximum: 1
+                enhancement_reduce_noise:
+                  default: 0.3
+                  description: Noise reduction (Manual only).
+                  x-krea-visible-when:
+                  - field: enhancement_parameters
+                    equals: Manual
+                  type: number
+                  minimum: -1
+                  maximum: 1
+                enhancement_reduce_halo:
+                  default: 0.4
+                  description: Halo reduction (Manual only).
+                  x-krea-visible-when:
+                  - field: enhancement_parameters
+                    equals: Manual
+                  type: number
+                  minimum: -1
+                  maximum: 1
+                enhancement_preblur:
+                  default: 0.5
+                  description: Anti-alias / deblur strength (Manual only).
+                  x-krea-visible-when:
+                  - field: enhancement_parameters
+                    equals: Manual
+                  type: number
+                  minimum: -1
+                  maximum: 1
+                frame_interpolation:
+                  default: true
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                grain:
+                  default: false
+                  description: Add artificial film grain.
+                  type: boolean
+                grain_strength:
+                  default: 0.02
+                  description: Film grain strength (grain only).
+                  x-krea-visible-when:
+                  - field: grain
+                    equals: true
+                  type: number
+                  minimum: 0
+                  maximum: 0.1
+                grain_size:
+                  default: 1
+                  description: Film grain particle size (grain only).
+                  x-krea-visible-when:
+                  - field: grain
+                    equals: true
+                  type: number
+                  minimum: 0
+                  maximum: 5
+                video_output_preset:
+                  default: h265-main
+                  description: 'Output encoder profile: codec, container, and bit depth.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazVideoUpscale
+      x-operation-id-source: derived
+  /generate/enhance/topaz/starlight-precise:
+    post:
+      tags:
+      - Video Enhance
+      description: A diffusion-based AI upscaler from Topaz that transforms low-resolution and degraded video into HD quality. Max 4K.
+      summary: Topaz Starlight Precise
+      deprecated: true
+      x-krea-deprecation:
+        sunset_date: '2026-11-16'
+        replacement: enhance/topaz/starlight-fast-3
+        reason: Topaz discontinued Starlight Fast 1 in October 2026. Requests already run on Starlight Fast 3.
+        migration_url: https://docs.krea.ai/developers/deprecations#topaz-starlight-v1
+      x-mint:
+        content: '<Note>
+
+          This model is deprecated as of 2026-11-16. Topaz discontinued Starlight Fast 1 in October 2026. Requests already run on Starlight Fast 3. Use `enhance/topaz/starlight-fast-3` instead. See the [migration guide](https://docs.krea.ai/developers/deprecations#topaz-starlight-v1).
+
+          </Note>'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source width; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source height; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                frame_interpolation:
+                  default: false
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                video_output_preset:
+                  default: h265-main
+                  description: 'Output encoder profile: codec, container, and bit depth.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazStarlightPrecise
+      x-operation-id-source: derived
+  /generate/enhance/topaz/starlight-fast-3:
+    post:
+      tags:
+      - Video Enhance
+      description: Fast diffusion-based AI upscaler from Topaz that restores low-resolution and degraded video. Max 4K.
+      summary: Topaz Starlight Fast 3
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source width; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source height; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                frame_interpolation:
+                  default: false
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                video_output_preset:
+                  default: h265-main
+                  description: 'Output encoder profile: codec, container, and bit depth.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazStarlightFast3
+      x-operation-id-source: derived
+  /generate/enhance/topaz/starlight-precise-25:
+    post:
+      tags:
+      - Video Enhance
+      description: The latest diffusion-based AI upscaler from Topaz. Sharper results with fewer artifacts than the original Starlight. Max 4K.
+      summary: Topaz Starlight Precise 2.5
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source video width.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source video height.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                frame_interpolation:
+                  default: false
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                video_output_preset:
+                  default: h265-main
+                  description: 'Output encoder profile: codec, container, and bit depth.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazStarlightPrecise25
+      x-operation-id-source: derived
+  /generate/enhance/topaz/astra:
+    post:
+      tags:
+      - Video Enhance
+      description: Creative video enhancer for upscaling AI-generated videos up to 4K resolution.
+      summary: Topaz Astra
+      deprecated: true
+      x-krea-deprecation:
+        sunset_date: '2026-11-16'
+        replacement: enhance/topaz/astra-2
+        reason: Topaz discontinued Astra 1 (Starlight Creative 1) in October 2026. Requests already run on Astra 2.
+        migration_url: https://docs.krea.ai/developers/deprecations#topaz-starlight-v1
+      x-mint:
+        content: '<Note>
+
+          This model is deprecated as of 2026-11-16. Topaz discontinued Astra 1 (Starlight Creative 1) in October 2026. Requests already run on Astra 2. Use `enhance/topaz/astra-2` instead. See the [migration guide](https://docs.krea.ai/developers/deprecations#topaz-starlight-v1).
+
+          </Note>'
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source width; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source height; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                creativity:
+                  default: low
+                  description: How much creative detail Astra adds while enhancing.
+                  type: string
+                  enum:
+                  - low
+                  - high
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                frame_interpolation:
+                  default: false
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                video_output_preset:
+                  default: h265-main
+                  description: 'Output encoder profile: codec, container, and bit depth.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazAstra
+      x-operation-id-source: derived
+  /generate/enhance/topaz/astra-2:
+    post:
+      tags:
+      - Video Enhance
+      description: Creative diffusion-based video upscaler with prompt guidance, creativity, and sharpness controls. Max 4K.
+      summary: Topaz Astra 2
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source width; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source height; output is scaled proportionally to at least 1920x1080 pixels in area.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                creativity:
+                  default: middle
+                  description: How much creative detail Astra 2 adds while enhancing.
+                  type: string
+                  enum:
+                  - low
+                  - middle
+                  - high
+                sharp:
+                  default: 0.5
+                  description: Sharpening strength (0 to 1).
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                realism:
+                  description: Realism strength (0 to 1); higher pushes toward photoreal detail.
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                prompt:
+                  description: Optional prompt guiding the enhancement.
+                  type: string
+                  maxLength: 1500
+                frame_interpolation:
+                  default: false
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                video_output_preset:
+                  default: h265-main
+                  description: 'Output encoder profile: codec, container, and bit depth.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazAstra2
+      x-operation-id-source: derived
+  /generate/enhance/topaz/hyperion:
+    post:
+      tags:
+      - Video Enhance
+      description: Topaz's SDR to HDR conversion model. Expands SDR footage to HDR (BT.2100 PQ) with 10-bit output. Max 4K.
+      summary: Topaz Hyperion 2.5
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Output width in pixels. Defaults to the source video width.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                target_height:
+                  description: Output height in pixels. Defaults to the source video height.
+                  type: number
+                  minimum: 1
+                  maximum: 8000
+                crop_to_fit:
+                  default: false
+                  description: Crop the video to fill the target dimensions instead of preserving the source aspect ratio.
+                  type: boolean
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                frame_interpolation:
+                  default: false
+                  description: Interpolate extra frames to raise the output frame rate.
+                  type: boolean
+                frame_interpolation_fps:
+                  default: 60
+                  description: Target output frame rate (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 15
+                  maximum: 240
+                frame_interpolation_model:
+                  default: apo-8
+                  description: Frame interpolation model.
+                  x-krea-enum-labels:
+                  - Apollo
+                  - Apollo Fast
+                  - Chronos
+                  - Chronos Fast
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: string
+                  enum:
+                  - apo-8
+                  - apf-2
+                  - chr-2
+                  - chf-3
+                frame_interpolation_slowmo:
+                  default: 1
+                  description: Slow-motion factor, 1 keeps the original speed (frame interpolation only).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: integer
+                  minimum: 1
+                  maximum: 16
+                frame_interpolation_fix_duplicate_frames:
+                  default: true
+                  description: Detect and drop duplicate frames before interpolating.
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  type: boolean
+                frame_interpolation_duplicate_sensitivity:
+                  default: 0.01
+                  description: Sensitivity of duplicate-frame detection (only when fix duplicate frames is on).
+                  x-krea-visible-when:
+                  - field: frame_interpolation
+                    equals: true
+                  - field: frame_interpolation_fix_duplicate_frames
+                    equals: true
+                  type: number
+                  minimum: 0.001
+                  maximum: 0.1
+                video_output_preset:
+                  default: h265-main10
+                  description: 'Output encoder profile: codec, container, and bit depth. HDR output requires a 10-bit profile.'
+                  x-krea-enum-labels:
+                  - H.264 High (8-bit)
+                  - H.265 Main (8-bit)
+                  - H.265 Main10 (10-bit)
+                  - ProRes 422 Proxy (10-bit)
+                  - ProRes 422 LT (10-bit)
+                  - ProRes 422 Std (10-bit)
+                  - ProRes 422 HQ (10-bit)
+                  - AV1 (8-bit)
+                  - AV1 (10-bit)
+                  - VP9 Good (8-bit)
+                  - VP9 Best (8-bit)
+                  type: string
+                  enum:
+                  - h264-high
+                  - h265-main
+                  - h265-main10
+                  - prores-422-proxy
+                  - prores-422-lt
+                  - prores-422-std
+                  - prores-422-hq
+                  - av1-8-bit
+                  - av1-10-bit
+                  - vp9-good
+                  - vp9-best
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceTopazHyperion
+      x-operation-id-source: derived
+  /generate/enhance/bytedance/seedvr-2:
+    post:
+      tags:
+      - Video Enhance
+      description: Fast video upscaler. Max 4K.
+      summary: SeedVR 2
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                target_width:
+                  description: Target output width in pixels (max 3840). Must upscale the source. Omit both dimensions for 2x, capped at 3840x2160.
+                  type: number
+                  minimum: 1
+                  maximum: 3840
+                target_height:
+                  description: Target output height in pixels. Used only when target_width is omitted; effective output is capped at 2160 high. Must upscale the source. Omit both dimensions for 2x, capped at 3840x2160.
+                  type: number
+                  minimum: 1
+                  maximum: 3840
+                noise_scale:
+                  default: 0.1
+                  description: Denoising strength applied during restoration (0 to 1).
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceBytedanceSeedvr2
+      x-operation-id-source: derived
+  /generate/enhance/black-forest-labs/flux-video-upscale:
+    post:
+      tags:
+      - Video Enhance
+      description: Super-resolution with precise or creative modes. Sources up to 2560px and 20s; output up to 3x and 4K.
+      summary: Flux Video Upscale
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                creativity:
+                  default: creative
+                  description: '''precise'' is a source-faithful upscale; ''creative'' adds generated detail. Priced differently.'
+                  type: string
+                  enum:
+                  - precise
+                  - creative
+                upscale_factor:
+                  default: 2
+                  description: Output scaling factor (1.5 to 3). The source aspect ratio is preserved.
+                  type: number
+                  minimum: 1.5
+                  maximum: 3
+                prompt:
+                  description: Optional description used to guide creative detail enhancement.
+                  type: string
+                  maxLength: 5000
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceBlackForestLabsFluxVideoUpscale
+      x-operation-id-source: derived
+  /generate/enhance/runway/ruby:
+    post:
+      tags:
+      - Video Enhance
+      description: Runway's SDR→HDR converter. True HDR from any clip up to 30s — resolution, pixels, and audio untouched.
+      summary: Runway Ruby
+      parameters:
+      - name: X-Webhook-URL
+        in: header
+        required: false
+        schema:
+          type: string
+          format: uri
+        description: URL to receive a POST request when the job completes. The webhook will receive the job data including results. When signing is configured, deliveries are signed with ECDSA P-256 (ES256); verify them with the keys at https://api.krea.ai/.well-known/jwks.json (see X-Krea-Webhook-* headers). Treat requests without these headers as unauthenticated.
+      requestBody:
+        content:
+          application/json:
+            example: {}
+            schema:
+              type: object
+              properties:
+                output_format:
+                  default: hdr10
+                  description: 'HDR output format: hdr10 (HEVC Main 10 BT.2020+PQ .mp4), hlg (HEVC Main 10 BT.2020+HLG .mp4), or hdr_prores (BT.2020+PQ ProRes .mov).'
+                  type: string
+                  enum:
+                  - hdr10
+                  - hlg
+                  - hdr_prores
+                video_url:
+                  type: string
+                  maxLength: 1024
+                  format: uri
+                  description: Can be an external URL, base64 data URI, or uploaded asset URL.
+                prores_profile:
+                  description: ProRes profile, only valid with hdr_prores (defaults to 422 HQ).
+                  x-krea-visible-when:
+                  - field: output_format
+                    equals: hdr_prores
+                  type: string
+                  enum:
+                  - '422'
+                  - '4444'
+                  - 422 HQ
+              required:
+              - video_url
+              additionalProperties: false
+      responses:
+        '200':
+          description: The resulting job data. This will be returned in a pending state until the job is completed. See [`/jobs/{id}`](#tag/default/get/jobs/{id}) for retrieving the results.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                    pattern: ^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$
+                  status:
+                    type: string
+                    enum:
+                    - backlogged
+                    - queued
+                    - scheduled
+                    - processing
+                    - sampling
+                    - intermediate-complete
+                    - completed
+                    - failed
+                    - cancelled
+                  created_at:
+                    type: string
+                    format: date-time
+                    pattern: ^(?:(?:\d\d[2468][048]|\d\d[13579][26]|\d\d0[48]|[02468][048]00|[13579][26]00)-02-29|\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\d|30)|(?:02)-(?:0[1-9]|1\d|2[0-8])))T(?:(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d+)?(?:Z))$
+                  completed_at:
+                    type: 'null'
+                  result:
+                    type: 'null'
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                      message:
+                        type: string
+                    required:
+                    - code
+                    additionalProperties: false
+                  progress:
+                    anyOf:
+                    - type: number
+                      minimum: 0
+                      maximum: 1
+                    - type: 'null'
+                required:
+                - job_id
+                - status
+                - created_at
+                - completed_at
+                - result
+                additionalProperties: false
+        '400':
+          description: The request body is invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '401':
+          description: You are not authenticated.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '402':
+          description: You have run out of credits.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+        '429':
+          description: You have reached the maximum number of concurrent jobs.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                required:
+                - error
+                additionalProperties: false
+      operationId: postGenerateEnhanceRunwayRuby
+      x-operation-id-source: derived
+components:
+  securitySchemes:
+    bearerAuth:
+      scheme: bearer
+      bearerFormat: Bearer
+      type: http
