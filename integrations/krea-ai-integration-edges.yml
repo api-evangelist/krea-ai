@@ -28,6 +28,37 @@ edges:
     sector: Consumer
   detected_by: sweep-vc-portfolios.py
   first_seen: '2026-10-21'
+- partner_name: Hugging Face (hugging-face-hub)
+  partner: hugging-face
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: hugging-face-hub
+  evidence: https://huggingface.co/krea
+  mirror_of: hugging-face/integrations/hugging-face-integration-edges.yml
+  apps:
+  - krea/pose-data-2
+  - krea/pose-data-1
+  - krea/Krea-2-Raw
+  - krea/Krea-2-Turbo
+  - krea/krea-realtime-video
+  - krea/Krea-2-LoRA-retroanime
+  - krea/Krea-2-LoRA-darkbrush
+  - krea/Krea-2-LoRA-softwatercolor
+  - krea/Krea-2-LoRA-vintagetarot
+  - krea/Krea-2-LoRA-kidsdrawing
+  - krea/Krea-2
+  - krea/krea-lora-the-explorer
+  - krea/Krea-2-Turbo-workflow
+  listing_count: 3
+  detected: '2026-10-23'
+  detected_by: mirror-platform-listings.py
+  category: Hugging Face Hub datasets
+  badges:
+  - Verified publisher (Hugging Face verified organisation)
 generated: '2026-10-21'
 method: searched
 source:
@@ -44,3 +75,4 @@ checked:
 - https://www.indexventures.com/companies/
 - https://www.sequoiacap.com/our-companies/
 - https://www.sequoiacap.com/sitemap.xml
+- hugging-face/integrations/hugging-face-integration-edges.yml
