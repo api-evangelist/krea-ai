@@ -1,4 +1,4 @@
-# Krea (krea-ai)
+# Krea
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,254 +66,121 @@
 
 Krea is a real-time AI creative suite that lets designers, filmmakers, brand teams, and everyday creators generate, edit, enhance, and animate images and videos with professional controls from a single workspace. The Krea API at https://api.krea.ai exposes 50+ third-party and proprietary image and video models — Flux, Imagen, Veo, Nano Banana, gpt-image, Runway, Kling, Seedream, Seedance, Hailuo, Wan, Ray, Grok Imagine, Ideogram, Qwen, Z Image, Topaz, and more — through one Bearer-token-authenticated REST surface with a unified async job lifecycle, compute-unit billing, asset management, LoRA style training, Nodes workflow execution, and webhook delivery. Krea also publishes open-source models including FLUX.1 Krea [dev] (in collaboration with Black Forest Labs) and Krea Realtime 14B, a Self-Forcing distillation of Wan 2.1 that produces 11 fps text-to-video on an NVIDIA B200.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/krea-ai/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/krea-ai/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · Image Generation · Video Generation · Generative AI · Real-Time · Multi-Modal · Creative Tools · 3D · Upscaling
 
-## Scope
+## Krea on APIs.io
 
-- **Position:** Consuming
-- **Access:** 3rd-Party
+Everything profiled for Krea is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/krea-ai/](https://apis.io/providers/krea-ai/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (7)
 
-- AI
-- Artificial Intelligence
-- Image Generation
-- Video Generation
-- Generative AI
-- Real Time
-- Multimodal
-- Creative Tools
-- 3D
-- Upscaling
+- [Krea Assets API](https://apis.io/apis/krea-ai/krea-ai-assets-api/) — Asset management endpoints for uploading and managing images, videos, audio files, and 3D models
+- [Krea General API](https://apis.io/apis/krea-ai/krea-ai-general-api/) — Core API operations including job management and billing information
+- [Krea Image API](https://apis.io/apis/krea-ai/krea-ai-image-api/) — Image generation endpoints
+- [Krea Image Enhance API](https://apis.io/apis/krea-ai/krea-ai-image-enhance-api/) — Image enhance endpoints
+- [Krea Node Apps API](https://apis.io/apis/krea-ai/krea-ai-node-apps-api/) — Executing custom node apps built in our nodes tool
+- [Krea Styles API](https://apis.io/apis/krea-ai/krea-ai-styles-api/) — Style (LoRA) generation and management endpoints
+- [Krea Video API](https://apis.io/apis/krea-ai/krea-ai-video-api/) — Video generation endpoints
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-05-25T00:00:00.000Z
-- **Modified:** 2026-05-25
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### MCP servers (1)
 
-### Krea API
+Model Context Protocol servers that expose the API to agents.
 
-One REST API and one API token to access 50+ image and video generation models from Black Forest Labs (Flux), Google (Imagen, Nano Banana, Veo), OpenAI (gpt-image), Runway, Kling, ByteDance (Seedream, Seedance, SeedEdit), MiniMax (Hailuo), Alibaba (Wan), Luma (Ray), xAI (Grok Imagine), Ideogram, Qwen, and Lightricks. Asynchronous job pattern with poll-or-webhook delivery, asset upload management, custom LoRA training, and node-app execution — all on https://api.krea.ai with Bearer-token authentication and a unified compute-unit billing model.
+- [krea-ai](https://apis.io/servers/krea-ai/krea-ai/)
 
-- **Human URL:** [https://docs.krea.ai/api-reference/introduction](https://docs.krea.ai/api-reference/introduction)
-- **Base URL:** `https://api.krea.ai`
+#### Agentic access (1)
 
-#### Tags
+Which operations an agent can call, which act, and which need a human in the loop.
 
-- AI
-- Artificial Intelligence
-- Image Generation
-- Video Generation
-- Generative AI
-- Multimodal
+- [Krea Ai Agentic Access](https://apis.io/agentic-access/krea-ai/krea-ai-agentic-access/)
 
-#### Properties
+#### Collections (8)
 
-- [Documentation](https://docs.krea.ai/api-reference/introduction)
-- [Documentation](https://docs.krea.ai/developers/introduction)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-- [OpenAPI](https://docs.krea.ai/api-reference/openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](https://docs.krea.ai/api-reference/postman.md) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Authentication](https://docs.krea.ai/developers/api-keys-and-billing)
-- [Authentication](https://www.krea.ai/settings/api-tokens)
-- [Rate Limits](https://docs.krea.ai/developers/rate-limits)
-- [Webhooks](https://docs.krea.ai/developers/webhooks)
-- [Documentation](https://docs.krea.ai/developers/job-lifecycle)
-- [Deprecation](https://docs.krea.ai/developers/deprecations)
-- [Sandbox](https://docs.krea.ai/developers/interactiveexample)
+Postman and Open Collection request collections.
 
-### Krea Image Generation API
+- [Krea Assets API](https://apis.io/collections/krea-ai/open-krea-ai-assets-api/)
+- [Krea Assets General API](https://apis.io/collections/krea-ai/open-krea-ai-general-api/)
+- [Krea Assets Image API](https://apis.io/collections/krea-ai/open-krea-ai-image-api/)
+- [Krea Assets Image Enhance API](https://apis.io/collections/krea-ai/open-krea-ai-image-enhance-api/)
+- [Krea Assets Node Apps API](https://apis.io/collections/krea-ai/open-krea-ai-node-apps-api/)
+- [Krea Assets Styles API](https://apis.io/collections/krea-ai/open-krea-ai-styles-api/)
+- [Krea Assets Video API](https://apis.io/collections/krea-ai/open-krea-ai-video-api/)
+- [Krea API](https://apis.io/collections/krea-ai/open-krea-api/)
 
-Text-to-image and image-to-image generation across 22 model endpoints under /generate/image/{provider}/{model}, including Black Forest Labs Flux (Flux 1 dev, Flux 1 Kontext, Flux 1.1 Pro, Flux 1.1 Pro Ultra), Google Imagen 3/4/4-Fast/4-Ultra and Nano Banana / Nano Banana 2 / Nano Banana Pro, OpenAI gpt-image and gpt-image-2, ByteDance Seedream 4, Seedream 5 Lite, and SeedEdit, Ideogram 2 Turbo and Ideogram 3, Runway Gen-4 Image, Luma UNI-1, Qwen 2512, and Z Image.
+#### Security (3)
 
-- **Human URL:** [https://docs.krea.ai/api-reference/image/flux](https://docs.krea.ai/api-reference/image/flux)
+Authentication, trust centre, and vulnerability disclosure.
 
-#### Tags
+- [Krea Ai Authentication](https://apis.io/security/krea-ai/krea-ai-authentication/)
+- [Krea Ai Domain Security](https://apis.io/security/krea-ai/krea-ai-domain-security/)
+- [Krea Ai Trust Center](https://apis.io/security/krea-ai/krea-ai-trust-center/)
 
-- AI
-- Image Generation
-- Text To Image
-- Image To Image
+## Where to find this API
 
-#### Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
-- [Documentation](https://docs.krea.ai/api-reference/image/flux)
-- [Code Examples](https://docs.krea.ai/developers/examples/text-to-image)
-- [Code Examples](https://docs.krea.ai/developers/examples/image-to-image)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Krea Video Generation API
-
-Text-to-video and image-to-video generation across 31 model endpoints under /generate/video/{provider}/{model}, including Google Veo 2 / Veo 3 / Veo 3 Fast / Veo 3.1 / Veo 3.1 Fast / Veo 3.1 Lite, Runway Gen-3, Gen-4 Video, Gen-4.5, and Aleph, Kling 1.0 through Kling 3.0 plus Kling o1, MiniMax Hailuo / Hailuo 02 / Hailuo 2.3 / Hailuo 2.3 Fast, Alibaba Wan 2.1 / 2.2 / 2.5, ByteDance Seedance Pro and Seedance Pro Fast, Luma Ray 2, Lightricks LTX-2.3 22B, and xAI Grok Imagine.
-
-- **Human URL:** [https://docs.krea.ai/api-reference/video/veo-3](https://docs.krea.ai/api-reference/video/veo-3)
-
-#### Tags
-
-- AI
-- Video Generation
-- Text To Video
-- Image To Video
-
-#### Properties
-
-- [Documentation](https://docs.krea.ai/api-reference/video/veo-3)
-- [Code Examples](https://docs.krea.ai/developers/examples/text-to-video)
-- [Code Examples](https://docs.krea.ai/developers/examples/image-to-video)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Krea Image Enhance API
-
-Image upscaling and enhancement powered by Topaz Labs models under /generate/enhance/topaz. Three endpoints — standard-enhance, generative-enhance, and bloom-enhance — deliver up to 22K resolution upscales for stills, with the same Bearer-auth and job-lifecycle pattern as the rest of the Krea API.
-
-- **Human URL:** [https://docs.krea.ai/api-reference/image-enhance/topaz](https://docs.krea.ai/api-reference/image-enhance/topaz)
-
-#### Tags
-
-- AI
-- Image Enhancement
-- Upscaling
-
-#### Properties
-
-- [Documentation](https://docs.krea.ai/api-reference/image-enhance/topaz)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Krea Styles API (LoRA)
-
-Train, search, update, share, and unshare custom LoRA styles. Endpoints include POST /styles/train, GET /styles, GET /styles/{id}, PATCH /styles/{id}, GET /styles/{id}/share/link, and POST/DELETE /styles/{id}/share/workspace — letting teams bake their visual identity into Krea image models without managing GPU infrastructure.
-
-- **Human URL:** [https://docs.krea.ai/api-reference/styles/train-a-custom-style-lora](https://docs.krea.ai/api-reference/styles/train-a-custom-style-lora)
-
-#### Tags
-
-- AI
-- Custom Models
-- LoRA
-- Fine Tuning
-
-#### Properties
-
-- [Documentation](https://docs.krea.ai/api-reference/styles/train-a-custom-style-lora)
-- [Tutorial](https://docs.krea.ai/developers/tutorials/train-image-style)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Krea Assets API
-
-Upload, list, retrieve, and delete assets (images, videos, audio, 3D models) used as inputs to generation, edit, enhance, and node-app endpoints. Endpoints are POST /assets, GET /assets, GET /assets/{id}, and DELETE /assets/{id}.
-
-- **Human URL:** [https://docs.krea.ai/api-reference/assets/upload-an-asset](https://docs.krea.ai/api-reference/assets/upload-an-asset)
-
-#### Tags
-
-- AI
-- Asset Management
-- File Upload
-
-#### Properties
-
-- [Documentation](https://docs.krea.ai/api-reference/assets/upload-an-asset)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Krea Jobs API
-
-Manage the asynchronous lifecycle of every generation request. GET /jobs lists jobs, GET /jobs/{id} returns the current state (queued, processing, completed, failed, cancelled) with result.urls or result.error, and DELETE /jobs/{id} cancels a queued or running job. Only completed jobs consume compute units — failed and cancelled jobs are free.
-
-- **Human URL:** [https://docs.krea.ai/api-reference/general/list-jobs](https://docs.krea.ai/api-reference/general/list-jobs)
-
-#### Tags
-
-- AI
-- Jobs
-- Async
-
-#### Properties
-
-- [Documentation](https://docs.krea.ai/api-reference/general/list-jobs)
-- [Documentation](https://docs.krea.ai/developers/job-lifecycle)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-### Krea Node Apps API
-
-Execute Krea Nodes workflows — visual pipelines built in the Krea Nodes tool — directly from the API. GET /node-apps/{id} inspects a node app by version ID and POST /node-apps/{id}/execute runs it with user-supplied inputs, returning a job ID that follows the standard Krea async pattern.
-
-- **Human URL:** [https://docs.krea.ai/api-reference/node-apps/execute-a-node-app](https://docs.krea.ai/api-reference/node-apps/execute-a-node-app)
-
-#### Tags
-
-- AI
-- Workflows
-- Automation
-
-#### Properties
-
-- [Documentation](https://docs.krea.ai/api-reference/node-apps/execute-a-node-app)
-- [OpenAPI](openapi/krea-api-openapi.json) — [OpenAPI Specification](https://spec.openapis.org/oas/latest.html)
-- [Postman Collection](collections/krea-api.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/krea-api.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
-
-## Common Properties
-
-- [Portal](https://www.krea.ai)
+- [Website](https://www.krea.ai/)
 - [Documentation](https://docs.krea.ai/)
-- [Documentation](https://docs.krea.ai/api-reference/introduction)
-- [Getting Started](https://docs.krea.ai/developers/introduction)
-- [Documentation](https://docs.krea.ai/llms.txt)
-- [Documentation](https://docs.krea.ai/CLAUDE.md)
+- [Getting started](https://docs.krea.ai/developers/introduction)
 - [Pricing](https://www.krea.ai/pricing)
-- [Authentication](https://www.krea.ai/settings/api-tokens)
-- [Rate Limits](https://docs.krea.ai/developers/rate-limits)
-- [Webhooks](https://docs.krea.ai/developers/webhooks)
-- [Documentation](https://docs.krea.ai/developers/job-lifecycle)
-- [Deprecation](https://docs.krea.ai/developers/deprecations)
-- [Sandbox](https://docs.krea.ai/developers/interactiveexample)
-- [Documentation](https://docs.krea.ai/realtime)
-- [Documentation](https://docs.krea.ai/image-generation)
-- [Documentation](https://docs.krea.ai/user-guide/features/video)
-- [Documentation](https://docs.krea.ai/3-d)
-- [Documentation](https://docs.krea.ai/user-guide/features/edit)
-- [Documentation](https://docs.krea.ai/user-guide/features/enhancer)
-- [Documentation](https://docs.krea.ai/user-guide/features/training)
-- [Documentation](https://docs.krea.ai/user-guide/features/nodes)
-- [Documentation](https://docs.krea.ai/user-guide/features/teams)
-- [Documentation](https://docs.krea.ai/user-guide/features/audio)
-- [Documentation](https://docs.krea.ai/user-guide/help-and-support/compute-units)
-- [Documentation](https://docs.krea.ai/user-guide/help-and-support/saml-sso-setup)
-- [Documentation](https://docs.krea.ai/user-guide/help-and-support/domain-verification)
-- [Documentation](https://docs.krea.ai/user-guide/help-and-support/model-access-controls)
-- [Documentation](https://docs.krea.ai/user-guide/help-and-support/manage-subscriptions)
-- [Documentation](https://docs.krea.ai/user-guide/help-and-support/refunds-and-billing)
-- [GitHub Organization](https://github.com/krea-ai)
-- [Open Source](https://github.com/krea-ai/realtime-video)
-- [Open Source](https://github.com/krea-ai/flux-krea)
-- [Open Source](https://github.com/krea-ai/open-prompts)
-- [Open Source](https://github.com/krea-ai/prompt-search)
-- [Open Source](https://github.com/krea-ai/skills)
-- [Forum](https://krea.ai/discord)
-- [X- Twitter](https://x.com/krea_ai)
-- [LinkedIn](https://www.linkedin.com/company/krea-ai)
-- [YouTube](https://www.youtube.com/@krea_ai)
-- [Plans](https://www.krea.ai/pricing)
-- [Features](undefined)
+- [Blog](https://www.krea.ai/blog)
+- [GitHub](https://github.com/krea-ai)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** info@apievangelist.com
-**URL:** https://apievangelist.com
+**Kin Score 37.7** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 52.5 |
+| Contract governance | 0.0 |
+| Operational transparency | 21.1 |
+| Developer ergonomics | 61.9 |
+| Access clarity | 18.4 |
+
+**Agent readiness 56.1** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | unknown |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | paginated |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 15.5** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/krea-ai/](https://apis.io/providers/krea-ai/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Krea: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/krea-ai/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
